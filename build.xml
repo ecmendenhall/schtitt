@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HTTPServer" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>Builds the HTTP Server command line application and its associated tests.</description>
+
+    <!-- Source and build directory defaults -->
+    <property name="src.dir" value="src"/>
+    <property name="resources.dir" value="resources"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir" value="${build.dir}/jar"/>
+
+    <property name="main-class" value="com.cmendenhall.Main"/>
+
+    <mkdir dir="lib" />
+    <property name="lib.dir" value="lib"/>
+    <property name="test.dir" value="test" />
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <path id="classpath.test">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <pathelement location="${classes.dir}" />
+        <pathelement location="${resources.dir}" />
+        <pathelement location="src.dir" />
+    </path>
+
+    <path id="classpath.pit">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <pathelement location="${classes.dir}" />
+        <pathelement location="${classes.dir}/test" />
+        <pathelement location="${resources.dir}" />
+        <pathelement location="src.dir" />
+    </path>
+
+    <path id="application" location="${jar.dir}/${ant.project.name}.jar"/>
+
+    <!-- Automatically download Ivy -->
+    <property name="ivy.install.version" value="2.1.0-rc2" />
+    <condition property="ivy.home" value="${env.IVY_HOME}">
+        <isset property="env.IVY_HOME" />
+    </condition>
+    <property name="ivy.home" value="${user.home}/.ant" />
+    <property name="ivy.jar.dir" value="${ivy.home}/lib" />
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+
+    <target name="download-ivy" unless="offline">
+
+        <mkdir dir="${ivy.jar.dir}"/>
+        <!-- download Ivy from web site so that it can be used even without any special installation -->
+        <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+             dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+
+    <target name="init-ivy" depends="download-ivy">
+        <!-- try to load ivy here from ivy home, in case the user has not already dropped
+                it into ant's lib dir (note that the latter copy will always take precedence).
+                We will not fail as long as local lib dir exists (it may be empty) and
+                ivy is in at least one of ant's lib dir or the local lib dir. -->
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>
+
+    <target name="resolve" description="Retrieve dependencies with Ivy." depends="init-ivy">
+        <echo message="Resolving project dependencies." />
+        <ivy:retrieve />
+    </target>
+
+    <target name="clean" description="Cleans up automatically generated files and directories.">
+        <echo message="Cleaning up build directory." />
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile" depends="resolve" description="Compiles project.">
+        <echo message="Compiling project." />
+        <mkdir dir="${classes.dir}"/>
+        <javac includeantruntime="false" debug="true" srcdir="${src.dir}" destdir="${classes.dir}" >
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+
+    <target name="compile-tests" depends="resolve, compile" description="Compiles JUnit tests." >
+        <echo message="Compiling JUnit tests." />
+        <mkdir dir="${classes.dir}" />
+        <javac includeantruntime="false" debug="true" srcdir="${test.dir}" destdir="${classes.dir}" >
+            <classpath refid="classpath.test" />
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="Packages project as .jar file.">
+        <echo message="Packaging project as .jar file." />
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar">
+            <manifest>
+                <attribute name="Main-class" value="${main-class}"/>
+            </manifest>
+            <fileset dir="${classes.dir}">
+                <include name="**/*.class" />
+            </fileset>
+            <fileset dir="${resources.dir}">
+                <include name="**/*.properties" />
+            </fileset>
+            <fileset dir="." includes="lib/*" />
+        </jar>
+    </target>
+
+    <property name="junitpath" refid="classpath.test" />
+
+    <target name="test" depends="compile, compile-tests" description="Runs JUnit tests.">
+        <echo message="Running JUnit tests." />
+        <junit printsummary="on" haltonfailure="yes" failureproperty="test.failure">
+            <jvmarg value="-Dfile.encoding=UTF-8:-XX:-UseSplitVerifier" />
+            <formatter type="brief" usefile="false" />
+            <classpath>
+                <path refid="classpath.test"/>
+            </classpath>
+
+            <batchtest fork="on">
+                <fileset id="matchedtests" dir="${classes.dir}">
+                    <include name="**/*Test.class"/>
+                    <exclude name="**/TicTacToeTest.class" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="mutation-test" depends="compile-tests">
+        <taskdef name="pitest" classname="org.pitest.ant.PitestTask"
+                 classpathref="classpath" />
+        <mkdir dir="${build.dir}/coverage" />
+        <pitest
+                classPath="classpath.pit"
+                targetClasses="com.cmendenhall.*"
+                targetTests="com.cmendenhall.tests.*"
+                reportDir="${build.dir}/coverage"
+                sourceDir="src.dir">
+        </pitest>
+    </target>
+
+    <target name="clean-build" depends="clean, jar" description="Cleans output directory and builds .jar.">
+        <echo message="Cleaning build directory and rebuilding .jar." />
+    </target>
+
+    <target name="build-all" depends="clean, jar, test" description="Cleans output directory, retrieves dependencies, builds and packages project and tests.">
+        <echo message="Finishing build." />
+    </target>
+
+</project>

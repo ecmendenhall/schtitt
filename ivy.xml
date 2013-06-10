@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+    <info organisation="com.cmendenhall" module="TTT" />
+    <dependencies>
+        <dependency org="junit" name="junit" rev="4.10" />
+        <dependency org="org.pitest" name="pitest" rev="0.30"/>
+        <dependency org="org.pitest" name="pitest-ant" rev="0.30"/>
+    </dependencies>
+</ivy-module>
