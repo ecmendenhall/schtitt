@@ -25,4 +25,23 @@ public class Utils {
         return extraDelimiter.substring(0, delimiterStart);
     }
 
+    public static byte[] join(byte[]... arrays) {
+        Integer totalLength = 0;
+        for (byte[] array : arrays) {
+            totalLength += array.length;
+        }
+
+        byte[] joinedArray = new byte[totalLength];
+
+        Integer joinedArrayIndex = 0;
+        for(byte[] array : arrays) {
+            for (Integer i=0; i < array.length; i++) {
+                joinedArray[joinedArrayIndex] = array[i];
+                joinedArrayIndex++;
+            }
+        }
+
+        return joinedArray;
+    }
+
 }
