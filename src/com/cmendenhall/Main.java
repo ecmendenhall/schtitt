@@ -7,25 +7,32 @@ import java.net.Socket;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        Integer port = null;
+        WebServerSocket socket;
+        while (true) {
+        if (port == null) {
+            socket = new WebServerSocket(64000);
+        } else {
+            socket = new WebServerSocket(port);
+        }
+        port = socket.getPort();
+        socket.listen();
+        //System.out.println("Client connected");
+        socket.getIOStreams();
 
-        /*RequestParser requestParser = new RequestParser();
-        Request request = requestParser.parse("GET / HTTP/1.0\r\n\r\n");
+        StringBuilder rawRequest = new StringBuilder();
+        String currentLine;
+        while((currentLine = socket.readLine()) != null) {
+            rawRequest.append(currentLine);
+            rawRequest.append("\n");
+            if (currentLine.length() == 0) break;
+        }
+        //System.out.println(rawRequest.toString());
 
-        InputStream input;
-        OutputStream output;
-        ServerSocket serverSocket = new ServerSocket(0);
-        System.out.println("Server listening on port " + serverSocket.getLocalPort());
-        Socket socket = serverSocket.accept();
-        input = socket.getInputStream();
-        output = socket.getOutputStream();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output));
-
-        String inputString;
-        while ((inputString = reader.readLine()) != null) {
-            System.out.println(inputString);
-        } */
+        RequestHandler handler = new RequestHandler(rawRequest.toString(), socket);
+        new Thread(handler).run();
+        socket.close();
+        }
     }
 
 }
