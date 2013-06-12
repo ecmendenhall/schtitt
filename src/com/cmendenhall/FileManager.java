@@ -1,10 +1,8 @@
 package com.cmendenhall;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class FileManager {
@@ -14,18 +12,27 @@ public class FileManager {
         return Arrays.asList(filePath.list());
     }
 
-    public String read(String path) {
-        String fileString = "";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(path));
-            String line;
-            while((line = reader.readLine()) != null) {
-               fileString += line;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileString;
+    private boolean isDirectory(String path) {
+        File endpoint = new File(path);
+        return endpoint.isDirectory();
     }
 
+    public boolean resourceExists(String path) {
+        if (path.charAt(0) == '/') {
+            path = path.substring(1);
+        }
+        File file = new File(path);
+        return file.exists();
+    }
+
+    public WebResource getWebResource(String path) {
+        if (path.charAt(0) == '/') {
+            path = path.substring(1);
+        }
+        if (isDirectory(path)) {
+            return new DirectoryResource(path);
+        } else {
+            return new FileResource(path);
+        }
+    }
 }

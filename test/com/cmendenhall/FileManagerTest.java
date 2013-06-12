@@ -8,6 +8,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
 
 public class FileManagerTest {
     private FileManager fileManager;
@@ -16,16 +17,6 @@ public class FileManagerTest {
     @Before
     public void setUp() {
         fileManager = new FileManager();
-        samplePage = "<html>" +
-                     "  <head>" +
-                     "  </head>" +
-                     "  <body>" +
-                     "    <p>" +
-                     "      Junior athletics is but one facet of the real gem:" +
-                     "      life's endless war against the self you cannot live without." +
-                     "    </p>" +
-                     "  </body>" +
-                     "</html>";
     }
 
     @Test
@@ -36,9 +27,10 @@ public class FileManagerTest {
     }
 
     @Test
-    public void fileManagerShouldReadFiles() {
-        String index = fileManager.read("test/sampledirectory/index.html");
-        assertEquals(samplePage, index);
+    public void fileManagerShouldRemovePrependedSlashesFromFilepath() {
+        WebResource fileOne = fileManager.getWebResource("test/sampledirectory/index.html");
+        WebResource fileTwo = fileManager.getWebResource("/test/sampledirectory/index.html");
+        assertArrayEquals(fileOne.binaryData(), fileTwo.binaryData());
     }
 
 }
