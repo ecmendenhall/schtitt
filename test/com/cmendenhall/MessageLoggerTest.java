@@ -5,11 +5,10 @@ import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class RequestLoggerTest {
-    RequestLogger requestLogger;
+public class MessageLoggerTest {
+    MessageLogger MessageLogger;
     RequestParser requestParser;
     Request request;
     Response response;
@@ -17,7 +16,7 @@ public class RequestLoggerTest {
 
     @Before
     public void setUp() throws UnsupportedEncodingException {
-        requestLogger = new RequestLogger();
+        MessageLogger = new MessageLogger();
         requestParser = new RequestParser();
         request = requestParser.makeRequest("GET / HTTP/1.0\r\n\r\n");
         response = new Response();
@@ -29,7 +28,7 @@ public class RequestLoggerTest {
     @Test
     public void loggerShouldPrintCorrectLogStringsForRequests() {
         recorder.start();
-        requestLogger.log(request);
+        MessageLogger.log(request);
         String expected = "\\[\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] GET /";
         String output = recorder.popLastOutput();
         assertTrue(output.matches(expected));
@@ -38,7 +37,7 @@ public class RequestLoggerTest {
     @Test
     public void loggerShouldPrintCorrectLogStringsForResponses() {
         recorder.start();
-        requestLogger.log(response);
+        MessageLogger.log(response);
         String expected = "\\[\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] HTTP/1.0 200 OK";
         String output = recorder.popLastOutput();
         assertTrue(output.matches(expected));
