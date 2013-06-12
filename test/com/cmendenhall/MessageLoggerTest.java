@@ -29,7 +29,7 @@ public class MessageLoggerTest {
     public void loggerShouldPrintCorrectLogStringsForRequests() {
         recorder.start();
         MessageLogger.log(request);
-        String expected = "\\[\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] GET /";
+        String expected = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}  \\[REQUEST\\]   GET /";
         String output = recorder.popLastOutput();
         assertTrue(output.matches(expected));
     }
@@ -38,7 +38,16 @@ public class MessageLoggerTest {
     public void loggerShouldPrintCorrectLogStringsForResponses() {
         recorder.start();
         MessageLogger.log(response);
-        String expected = "\\[\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\] HTTP/1.0 200 OK";
+        String expected = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}  \\[RESPONSE\\]  200 OK";
+        String output = recorder.popLastOutput();
+        assertTrue(output.matches(expected));
+    }
+
+    @Test
+    public void loggerShouldPrintCorrectLogStringsForInfoMessage() {
+        recorder.start();
+        MessageLogger.log("Keyboard not found. Press F1 to continue.");
+        String expected = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}  \\[INFO\\]      Keyboard not found. Press F1 to continue.";
         String output = recorder.popLastOutput();
         assertTrue(output.matches(expected));
     }

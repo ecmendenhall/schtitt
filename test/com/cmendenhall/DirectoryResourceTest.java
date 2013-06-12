@@ -18,6 +18,7 @@ public class DirectoryResourceTest {
                                "  </head>",
                                "  <body>",
                                "    <ul>",
+                               "      <li><a href='/test/'>[..]</a></li>",
                                "      <li><a href='characters.pdf'>characters.pdf</a></li>",
                                "      <li><a href='complicated.html'>complicated.html</a></li>",
                                "      <li><a href='eschaton.jpg'>eschaton.jpg</a></li>",
@@ -45,6 +46,23 @@ public class DirectoryResourceTest {
     @Test
     public void resourceConstructsDirectoryIndexPage() {
         assertEquals(indexPage, directory.stringData());
+    }
+
+    @Test
+    public void resourceReturnsIndexPageAsByteArray() {
+        String output = new String(directory.binaryData());
+        assertEquals(indexPage, output);
+    }
+
+    @Test
+    public void resourceReturnsCorrectCheckSum() {
+        String expectedCheckSum = "Qn65MyBivYA7H2tn+1g0LQ==";
+        assertEquals(expectedCheckSum, directory.checkSum());
+    }
+
+    @Test
+    public void resourceReturnsCorrectContentLength() {
+        assertEquals("536", directory.contentLength());
     }
 
 }

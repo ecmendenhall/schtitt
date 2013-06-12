@@ -1,6 +1,11 @@
 package com.cmendenhall;
 
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,11 +32,16 @@ public class DirectoryResource extends File implements WebResource {
     }
 
     public String contentLength() {
-        return null;
+        return "" + stringData().length();
     }
 
     public String checkSum() {
-        return null;
+        try {
+            byte[] digest = MessageDigest.getInstance("MD5").digest(binaryData());
+            return Base64.encode(digest);
+        } catch (NoSuchAlgorithmException e) {
+            return "";
+        }
     }
 
     private String makePage() {

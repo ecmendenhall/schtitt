@@ -18,6 +18,7 @@ public class WebServerSocketTest {
     @Before
     public void setUp() throws UnsupportedEncodingException {
         recorder = new OutputRecorder();
+        recorder.start();
     }
 
     @Test
@@ -35,7 +36,6 @@ public class WebServerSocketTest {
 
     @Test
     public void webServerSocketShouldPrintErrorMessageIfConstructedWithInvalidPort() {
-        recorder.start();
         webServerSocket = new WebServerSocket(80);
         String output = recorder.popLastOutput();
         String expected = "Can't get I/O for port 80";
