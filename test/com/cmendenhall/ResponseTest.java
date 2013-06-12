@@ -3,6 +3,8 @@ package com.cmendenhall;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
+
 import static junit.framework.Assert.assertEquals;
 
 public class ResponseTest {
@@ -52,20 +54,29 @@ public class ResponseTest {
     }
 
     @Test
-    public void bodyContentShouldBeConfigurable() {
+    public void bodyContentShouldBeConfigurable() throws UnsupportedEncodingException {
         response.body(samplePage);
-        String body = response.getBody();
+        String body = response.bodyString();
         assertEquals(samplePage, body);
     }
 
     @Test
-    public void responseReturnsFullResponseString() {
+    public void bodyContentShouldAcceptByteArray() throws UnsupportedEncodingException {
+        response.body(samplePage.getBytes("UTF-8"));
+        String reconstructedBody = response.bodyString();
+        assertEquals(samplePage, reconstructedBody);
+    }
+
+    @Test
+    public void responseReturnsCorrectByteArray() throws UnsupportedEncodingException {
         response.httpVersion("1.0");
         response.statusCode("200");
         response.setHeader("Server", "Schtitt/0.9b");
         response.body(samplePage);
-        String expected = "HTTP/1.0 200 OK" + "\r\n" + "Server: Schtitt/0.9b" + "\r\n" + samplePage + "\r\n\r\n";
-        assertEquals(expected, response.toString());
+        String expected = "HTTP/1.0 200 OK" + "\r\n" + "Server: Schtitt/0.9b" + "\r\n\r\n" + samplePage + "\r\n\r\n";
+        byte[] responseBytes = response.toBytes();
+        String reconstructedResponse = new String(responseBytes, "UTF-8");
+        assertEquals(expected, reconstructedResponse);
     }
 
 }

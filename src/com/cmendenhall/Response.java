@@ -1,5 +1,6 @@
 package com.cmendenhall;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,7 @@ public class Response {
     private String httpVersion;
     private Integer statusCode;
     private String reasonPhrase;
-    private String body;
+    private byte[] body;
 
     private HashMap<String, String> headers;
 
@@ -58,25 +59,49 @@ public class Response {
     }
 
     public void body(String bodyContent) {
+        try {
+            body = bodyContent.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void body(byte[] bodyContent) {
         body = bodyContent;
     }
 
-    public String getBody() {
+    public String bodyString() throws UnsupportedEncodingException {
+        return new String(body, "UTF-8");
+    }
+
+    protected byte[] bodyBytes() throws UnsupportedEncodingException {
         return body;
     }
 
-    public String toString() {
-        String statusLine = join(" ", httpVersion, statusCode.toString(), reasonPhrase);
+    public String statusLineString() {
+        return join(" ", httpVersion, statusCode.toString(), reasonPhrase);
+    }
 
+    private String headersString() {
         List<String> headerStrings = new ArrayList<String>();
         for (String header : headers.keySet()) {
             String headerString = header + ": " + headers.get(header);
             headerStrings.add(headerString);
         }
 
-        String allHeaders = join("\n", headerStrings);
+        return join("\r\n", headerStrings);
+    }
 
-        return join("\r\n", statusLine, allHeaders, body, "\r\n");
+    public byte[] toBytes() throws UnsupportedEncodingException {
+        byte[] carriageReturnNewline = "\r\n".getBytes("UTF-8");
+        return join(statusLineString().getBytes("UTF-8"),
+                    carriageReturnNewline,
+                    headersString().getBytes("UTF-8"),
+                    carriageReturnNewline,
+                    carriageReturnNewline,
+                    bodyBytes(),
+                    carriageReturnNewline,
+                    carriageReturnNewline);
     }
 
 }
