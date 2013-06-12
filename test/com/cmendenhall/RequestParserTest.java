@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.cmendenhall.Utils.join;
 import static junit.framework.Assert.assertEquals;
 
 public class RequestParserTest {
@@ -19,27 +20,27 @@ public class RequestParserTest {
 
     @Test
     public void requestParserShouldParseRequestMethod() {
-        request = requestParser.parse("GET / HTTP/1.0\r\n\r\n");
+        request = requestParser.makeRequest("GET / HTTP/1.0\r\n\r\n");
         assertEquals("GET", request.method());
     }
 
     @Test
     public void requestParserShouldParseRequestPath() {
-        request = requestParser.parse("GET / HTTP/1.0" +
+        request = requestParser.makeRequest("GET / HTTP/1.0" +
                                       "\r\n\r\n");
         assertEquals("/", request.path());
     }
 
     @Test
     public void requestParserShouldParseRequestHTTPVersion() {
-        request = requestParser.parse("GET / HTTP/1.0" +
+        request = requestParser.makeRequest("GET / HTTP/1.0" +
                                       "\r\n\r\n");
         assertEquals("HTTP/1.0", request.httpVersion());
     }
 
     @Test
     public void requestParserShouldIgnoreSpacesinFirstLine() {
-        request = requestParser.parse("GET     /        HTTP/1.0" +
+        request = requestParser.makeRequest("GET     /        HTTP/1.0" +
                                       "\r\n\r\n");
         assertEquals("GET", request.method());
         assertEquals("/", request.path());
@@ -48,7 +49,7 @@ public class RequestParserTest {
 
     @Test
     public void requestParserShouldParseHeaders() {
-        request = requestParser.parse("GET / HTTP/1.0" + "\r\n" +
+        request = requestParser.makeRequest("GET / HTTP/1.0" + "\r\n" +
                                       "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\n" +
                                       "Accept-Encoding:gzip,deflate,sdch\n" +
                                       "Accept-Language:en-US,en;q=0.8,tr;q=0.6\n" +
@@ -81,11 +82,21 @@ public class RequestParserTest {
 
     @Test
     public void requestParserShouldIgnoreSpacesInHeaders() {
-        request = requestParser.parse("GET / HTTP/1.0" +"\r\n" +
+        request = requestParser.makeRequest("GET / HTTP/1.0" +"\r\n" +
                                       "Accept:   text/html,    application/xhtml+xml     ,       application/xml;q=0.9\n" +
                                       "\r\n\r\n");
 
         List<String> accept = Arrays.asList("text/html", "application/xhtml+xml", "application/xml;q=0.9");
         assertEquals(accept, request.getHeader("Accept"));
+    }
+    
+    @Test
+    public void requestParserShouldReadBody() {
+        String body = "<html><head></head><body><h1>Howling Fantods</h1></body></html>";
+        request = requestParser.makeRequest(join("\r\n", "GET / HTTP/1.0",
+                                                         "Accept: text/html",
+                                                         body,
+                                                         "\r\n"));
+        assertEquals(body, request.body());
     }
 }

@@ -22,7 +22,7 @@ public class RequestTest {
         HashMap<String, List<String>> headerParameters = new HashMap<String, List<String>>();
         headerParameters.put("Accept", Arrays.asList("text/html", "application/xhtml+xml"));
 
-        request = new Request(requestParameters, headerParameters);
+        request = new Request(requestParameters, headerParameters, "");
     }
 
     @Test

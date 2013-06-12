@@ -16,15 +16,17 @@ public class RequestParser {
     public RequestParser() {
         requestParameters = new HashMap<String, String>();
         headers = new HashMap<String, List<String>>();
+        body = "";
     }
 
-    public Request parse(String request) {
+    public Request makeRequest(String request) {
         List<String> messageParts = split(request, "\r\n");
         try {
             parseFirstLine(messageParts.get(0));
             parseHeaders(messageParts.get(1));
+            body = messageParts.get(2);
         } catch (ArrayIndexOutOfBoundsException e) {}
-        return new Request(requestParameters, headers);
+        return new Request(requestParameters, headers, body);
     }
 
     private void parseFirstLine(String firstLine) {
@@ -45,5 +47,4 @@ public class RequestParser {
             headers.put(headerName, headerValues);
         }
     }
-
 }

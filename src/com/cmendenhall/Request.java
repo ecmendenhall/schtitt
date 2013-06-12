@@ -8,13 +8,16 @@ public class Request {
     private String path;
     private String httpVersion;
     private HashMap<String, List<String>> headers;
+    private String body;
 
     public Request(HashMap<String, String> requestParameters,
-                   HashMap<String, List<String>> headerParameters) {
+                   HashMap<String, List<String>> headerParameters,
+                   String bodyContent) {
         method = requestParameters.get("method");
         path = requestParameters.get("path");
         httpVersion = requestParameters.get("httpVersion");
         headers = headerParameters;
+        body = bodyContent;
     }
 
     public String method() {
@@ -23,6 +26,10 @@ public class Request {
 
     public String path() {
         return path;
+    }
+
+    public String body() {
+        return body;
     }
 
     public String httpVersion() {
