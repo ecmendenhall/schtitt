@@ -6,8 +6,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.cmendenhall.Utils.split;
 import static com.cmendenhall.Utils.join;
+import static com.cmendenhall.Utils.split;
 import static junit.framework.Assert.assertEquals;
 
 public class UtilsTest {

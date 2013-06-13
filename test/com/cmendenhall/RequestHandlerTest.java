@@ -1,9 +1,13 @@
 package com.cmendenhall;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -106,12 +110,17 @@ public class RequestHandlerTest {
 
     @Test
     public void handlerShouldConstructNotFoundResponses() throws UnsupportedEncodingException {
+        requestHandler = new RequestHandler(notFoundRequest, socket);
         response = requestHandler.constructNotFoundResponse();
         assertEquals("HTTP/1.0", response.getHttpVersion());
         assertEquals("404", "" + response.getStatusCode());
         assertHasDefaultHeaders(response);
         assertEquals("Not Found", response.getReasonPhrase());
-        assertEquals("404: Not found.", response.bodyString());
+        ResourceLoader loader = new ResourceLoader();
+        String template = loader.loadResource("404.html");
+        String stylesheet = loader.loadResource("style.css");
+        String expected = template.replace("{{% stylesheet %}}", stylesheet);
+        assertEquals(expected, response.bodyString());
     }
 
     @Test

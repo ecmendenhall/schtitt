@@ -8,8 +8,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 
 public class WebServerSocketTest {
     WebServerSocket webServerSocket;

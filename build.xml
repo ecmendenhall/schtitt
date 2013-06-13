@@ -104,7 +104,6 @@
                 <include name="**/*.class" />
             </fileset>
             <fileset dir="${resources.dir}">
-                <include name="**/*.properties" />
             </fileset>
             <fileset dir="." includes="lib/*" />
         </jar>

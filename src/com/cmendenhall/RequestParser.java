@@ -1,8 +1,5 @@
 package com.cmendenhall;
 
-import com.cmendenhall.Request;
-
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

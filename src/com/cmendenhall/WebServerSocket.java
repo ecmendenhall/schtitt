@@ -38,6 +38,7 @@ public class WebServerSocket {
 
     public void listen() throws IOException {
         socket = serverSocket.accept();
+        getIOStreams();
     }
 
     public void getIOStreams() throws IOException {
@@ -64,7 +65,6 @@ public class WebServerSocket {
     }
 
     public void close() throws IOException {
-        serverSocket.close();
         socket.close();
     }
 

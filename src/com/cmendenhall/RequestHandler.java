@@ -1,6 +1,5 @@
 package com.cmendenhall;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -77,7 +76,7 @@ public class RequestHandler implements Runnable {
         response.httpVersion("1.0");
         response.statusCode("404");
         addDefaultHeaders(response);
-        response.body("404: Not found.");
+        addFileData(response);
         return response;
     }
 
@@ -86,6 +85,8 @@ public class RequestHandler implements Runnable {
         try {
             socket.write(response.toBytes());
             logger.log(response);
+            socket.close();
+            socket.listen();
         } catch (IOException e) {
             e.printStackTrace();
         }
