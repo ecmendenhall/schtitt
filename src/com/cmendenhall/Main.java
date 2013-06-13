@@ -1,38 +1,69 @@
 package com.cmendenhall;
 
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.HashMap;
 
 public class Main {
+    private static MessageLogger logger = new MessageLogger();
+    private static String rootDirectory = null;
+    private static Integer port = 0;
 
-    public static void main(String[] args) throws IOException {
-        Integer port = null;
-        WebServerSocket socket;
-        while (true) {
-        if (port == null) {
-            socket = new WebServerSocket(64000);
+    public static void main(String[] args) {
+        loadArgs(args);
+        printStartupMessage();
+        setRootDirectory();
+
+        WebServerSocket socket = getSocket();
+        RequestListener requestListener = new RequestListener(socket);
+        requestListener.listen();
+    }
+
+    public static void printStartupMessage() {
+        System.out.println("Schtitt 0.9a");
+        logger.log("Press c-C to exit.");
+    }
+
+    public static void setRootDirectory() {
+        if (rootDirectory != null) {
+            System.setProperty("user.dir", rootDirectory);
+            logger.log("Serving files from " + System.getProperty("user.dir"));
         } else {
-            socket = new WebServerSocket(port);
+            logger.log("Serving files from this folder.");
         }
-        port = socket.getPort();
-        socket.listen();
-        //System.out.println("Client connected");
-        socket.getIOStreams();
+    }
 
-        StringBuilder rawRequest = new StringBuilder();
-        String currentLine;
-        while((currentLine = socket.readLine()) != null) {
-            rawRequest.append(currentLine);
-            rawRequest.append("\n");
-            if (currentLine.length() == 0) break;
+    public static void loadArgs(String[] args) {
+        if (args.length > 0) {
+            HashMap<String, String> commandLineArgs = parseArgs(args);
+            try {
+                port = Integer.parseInt(commandLineArgs.get("-p"));
+            } catch (NumberFormatException e) {}
+            rootDirectory = commandLineArgs.get("-d");
         }
-        //System.out.println(rawRequest.toString());
+    }
 
-        RequestHandler handler = new RequestHandler(rawRequest.toString(), socket);
-        new Thread(handler).run();
-        socket.close();
+    public static HashMap<String, String> parseArgs(String[] args) {
+        HashMap<String, String> commandLineArgs = new HashMap<String, String>();
+        if (args.length == 4) {
+            commandLineArgs.put(args[0], args[1]);
+            commandLineArgs.put(args[2], args[3]);
+        } else if (args.length == 2) {
+            commandLineArgs.put(args[0], args[1]);
+        } else {
+            System.err.println("Usage: java -jar <your jar file> -p <port> -d <directory to serve>");
         }
+        return commandLineArgs;
+    }
+
+    public static WebServerSocket getSocket() {
+        return (port > 0) ? new WebServerSocket(port) : new WebServerSocket();
+    }
+
+    public static Integer getPort() {
+        return port;
+    }
+
+    public static String getRootDirectory() {
+        return rootDirectory;
     }
 
 }
