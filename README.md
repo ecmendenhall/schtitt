@@ -25,12 +25,6 @@ To run bundled JUnit tests:
 ```
 $ ant test
 ```
-To run bundled PIT mutation tests:
-```
-$ ant mutation-test
-```
-You'll find the mutation test report in build/coverage.
-
 To run the server, navigate to build/jar and run:
 ```
 $ java -jar HTTPServer
