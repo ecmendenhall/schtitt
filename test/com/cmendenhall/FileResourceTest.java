@@ -116,4 +116,9 @@ public class FileResourceTest {
         testCheckSum(pdf, "qhfGNRL5BihtUrscUvhDyg==");
     }
 
+    @Test
+    public void filesReturnCorrectContentLengths() {
+        assertEquals("194", "" + html.contentLength());
+    }
+
 }

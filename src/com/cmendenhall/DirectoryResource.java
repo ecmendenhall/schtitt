@@ -8,19 +8,22 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+
 import static com.cmendenhall.Utils.join;
 
 public class DirectoryResource extends File implements WebResource {
     private String mimeType;
     private String path;
+    private ResourceLoader loader;
 
     public DirectoryResource(String filePath) {
         super(filePath);
 
         mimeType = "text/html; charset=UTF-8";
-        path = getPath();
+        path = filePath;
+        loader = new ResourceLoader();
     }
 
     public String mimeType() {
@@ -45,11 +48,25 @@ public class DirectoryResource extends File implements WebResource {
     }
 
     private String makePage() {
+        String template = makeTemplate();
+        HashMap<String, String> pageParameters = new HashMap<String, String>();
+        pageParameters.put("stylesheet", loader.loadResource("style.css"));
+        pageParameters.put("directorypath", getPath());
+        return renderPage(template, pageParameters);
+    }
+
+    private String makeTemplate() {
 
         String top    = join("\n", "<html>",
                                    "  <head>",
+                                   "    <title>Directory Listing</title>",
+                                   "    <style>",
+                                   "      {{% stylesheet %}}",
+                                   "    </style>",
                                    "  </head>",
                                    "  <body>",
+                                   "  <h1 class=\"directoryheader\">Directory listing</h1>",
+                                   "  <h2 class=\"directoryheader\">{{% directorypath %}}</h2>",
                                    "    <ul>");
 
         String middle = makeIndexEntries();
@@ -67,20 +84,31 @@ public class DirectoryResource extends File implements WebResource {
         File[] files = listFiles();
         List<String> listEntries = new ArrayList<String>();
 
-        if (getParent() != null) listEntries.add(makeEntry("/" + getParent() + "/", "[..]"));
+        if (path != System.getProperty("user.dir")) listEntries.add(makeEntry("/../", "[ .. ]", ""));
         for(File file : files) {
             String fileName = (file.isDirectory()) ? file.getName() + "/" : file.getName();
-            String filePath = (file.isDirectory()) ? "/" + file.getPath() + "/" : file.getName();
-            listEntries.add(makeEntry(filePath, fileName));
+            String filePath = (file.isDirectory()) ? file.getName() + "/" : file.getName();
+            String className = (file.isDirectory()) ? "folder" : "file";
+            listEntries.add(makeEntry(filePath, fileName, className));
         }
 
         return join("\n", listEntries);
     }
 
-    private String makeEntry(String filePath, String fileName) {
-        MessageFormat entryElement = new MessageFormat("      <li><a href=''{0}''>{1}</a></li>");
-        String[] name = { filePath, fileName };
+    private String makeEntry(String filePath, String fileName, String className) {
+        MessageFormat entryElement = new MessageFormat("      <li class=''{0}''><a href=''{1}''>{2}</a></li>");
+        String[] name = { className, filePath, fileName };
         return entryElement.format(name);
+    }
+
+    public String renderPage(String page, HashMap<String, String> pageParameters) {
+
+        for (String param : pageParameters.keySet()) {
+            String replacement = pageParameters.get(param);
+            page = page.replace("{{% " + param + " %}}", replacement);
+        }
+
+        return page;
     }
 
     public String stringData() {

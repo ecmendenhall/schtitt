@@ -1,11 +1,31 @@
 package com.cmendenhall;
 
-import java.io.*;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class FileManager {
+    private String rootDirectory = System.getProperty("user.dir");
+    private HashMap<String, String> specialPaths;
+    private ResourceLoader loader;
+    private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss z");
+
+    public FileManager() {
+        loader = new ResourceLoader();
+        specialPaths = new HashMap<String, String>();
+        registerSpecialPaths();
+    }
+
+    private void registerSpecialPaths() {
+        specialPaths.put("/hello", "hello.html");
+        specialPaths.put("/time", "time.html");
+        specialPaths.put("/form", "form.html");
+        specialPaths.put("/list", "list.html");
+    }
 
     public List<String> listDirectory(String path) {
         File filePath = new File(path);
@@ -18,21 +38,32 @@ public class FileManager {
     }
 
     public boolean resourceExists(String path) {
-        if (path.charAt(0) == '/') {
-            path = path.substring(1);
-        }
-        File file = new File(path);
+        if (specialPaths.containsKey(path) || path.contentEquals("/")) return true;
+        File file = new File(rootDirectory + path);
         return file.exists();
     }
 
     public WebResource getWebResource(String path) {
-        if (path.charAt(0) == '/') {
-            path = path.substring(1);
+        if (specialPaths.containsKey(path)) {
+            String resource = specialPaths.get(path);
+            HashMap<String, String> params = new HashMap<String, String>();
+            Date now = new Date();
+            params.put("time", dateFormat.format(now));
+            params.put("stylesheet", loader.loadResource("style.css"));
+            return new SpecialPage(resource, path, params);
         }
-        if (isDirectory(path)) {
-            return new DirectoryResource(path);
+        if (path.contentEquals("/")) {
+            return new DirectoryResource((rootDirectory.isEmpty()) ? "." : rootDirectory);
+        }
+        if (!resourceExists(path)) {
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("stylesheet", loader.loadResource("style.css"));
+            return new SpecialPage("404.html", path, params);
+        }
+        if (isDirectory(rootDirectory + path)) {
+            return new DirectoryResource(rootDirectory + path);
         } else {
-            return new FileResource(path);
+            return new FileResource(rootDirectory + path);
         }
     }
 }

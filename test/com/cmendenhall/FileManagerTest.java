@@ -6,10 +6,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertArrayEquals;
+import static junit.framework.Assert.*;
 
 public class FileManagerTest {
     private FileManager fileManager;
@@ -28,22 +25,27 @@ public class FileManagerTest {
     }
 
     @Test
-    public void fileManagerShouldRemovePrependedSlashesFromFilepath() {
-        WebResource fileOne = fileManager.getWebResource("test/sampledirectory/index.html");
-        WebResource fileTwo = fileManager.getWebResource("/test/sampledirectory/index.html");
-        assertArrayEquals(fileOne.binaryData(), fileTwo.binaryData());
-    }
-
-    @Test
     public void fileManagerReturnsFileResourcesWhenFileIsRequested() {
-        FileResource file = (FileResource)fileManager.getWebResource("test/sampledirectory/index.html");
+        FileResource file = (FileResource)fileManager.getWebResource("/test/sampledirectory/index.html");
         assertFalse(file.isDirectory());
     }
 
     @Test
     public void fileManagerReturnsDirectoryResourcesWhenDirectoryIsRequested() {
-        DirectoryResource directory = (DirectoryResource)fileManager.getWebResource("test/sampledirectory/");
+        DirectoryResource directory = (DirectoryResource)fileManager.getWebResource("/test/sampledirectory/");
         assertTrue(directory.isDirectory());
+    }
+
+    @Test
+    public void fileManagerReturnsSpecialPageWhenSpecialPathIsRequested() {
+        SpecialPage specialPage = (SpecialPage)fileManager.getWebResource("/hello");
+        assertEquals("/hello", specialPage.url());
+    }
+
+    @Test
+    public void fileManagerReturnsCurrentDirectoryWhenRootPathIsRequested() {
+        DirectoryResource rootDirectoryPage = (DirectoryResource)fileManager.getWebResource("/");
+        assertTrue(rootDirectoryPage.url().contains("/IdeaProjects/HTTPServer"));
     }
 
 }

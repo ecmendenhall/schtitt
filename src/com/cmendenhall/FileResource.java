@@ -36,6 +36,7 @@ public class FileResource extends File implements WebResource {
         mimeTypePrefixes.put("htm", "text");
         mimeTypePrefixes.put("html", "text");
         mimeTypePrefixes.put("txt", "text");
+        mimeTypePrefixes.put("css", "text");
 
         mimeTypePrefixes.put("pdf", "application");
     }
@@ -84,7 +85,7 @@ public class FileResource extends File implements WebResource {
     public String stringData() {
         StringBuilder fileString = new StringBuilder();
         try {
-            FileReader reader = new FileReader(getAbsolutePath());
+            FileReader reader = new FileReader(path);
             int currentChar;
             while((currentChar = reader.read()) != -1) {
                 fileString.append((char)currentChar);
@@ -99,7 +100,7 @@ public class FileResource extends File implements WebResource {
         FileInputStream byteStream;
         byte[] bytes = new byte[(int) this.length()];
         try {
-            byteStream = new FileInputStream(getAbsolutePath());
+            byteStream = new FileInputStream(path);
             int currentByte;
             int byteIndex = 0;
             while((currentByte = byteStream.read()) != -1) {
