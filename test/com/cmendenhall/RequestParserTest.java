@@ -93,10 +93,7 @@ public class RequestParserTest {
     @Test
     public void requestParserShouldReadBody() {
         String body = "<html><head></head><body><h1>Howling Fantods</h1></body></html>";
-        request = requestParser.makeRequest(join("\r\n", "GET / HTTP/1.0",
-                                                         "Accept: text/html",
-                                                         body,
-                                                         "\r\n"));
+        request = requestParser.makeRequest("GET / HTTP/1.0\nAccept: text/html\n\n" + body + "\n\n");
         assertEquals(body, request.body());
     }
 }

@@ -16,6 +16,7 @@ public class RequestListener {
                 String rawRequest = readRawRequest();
                 if (!rawRequest.isEmpty()) {
                     dispatchRequest(rawRequest);
+                    socket.listen();
                 }
             }
         } catch (IOException e) {
@@ -23,14 +24,17 @@ public class RequestListener {
         }
     }
 
-    private String readRawRequest() throws IOException {
+    public String readRawRequest() throws IOException {
         StringBuilder rawRequest = new StringBuilder();
         String currentLine;
-        while((currentLine = socket.readLine()) != null) {
-            rawRequest.append(currentLine);
-            rawRequest.append("\n");
-            if (currentLine.length() == 0) break;
+
+        while ((currentLine = socket.readLine()) != null) {
+            rawRequest.append(currentLine + "\n");
+            if (socket.waiting()) {
+                break;
+            }
         }
+        System.out.println(rawRequest.toString());
         return rawRequest.toString();
     }
 

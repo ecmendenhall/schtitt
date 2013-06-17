@@ -36,6 +36,14 @@ public class WebServerSocket {
         }
     }
 
+    public BufferedReader getInputReader() {
+        return inputReader;
+    }
+
+    public void setInputReader(BufferedReader inputReader) {
+        this.inputReader = inputReader;
+    }
+
     public void listen() throws IOException {
         socket = serverSocket.accept();
         getIOStreams();
@@ -50,6 +58,10 @@ public class WebServerSocket {
 
     public String readLine() throws IOException {
         return inputReader.readLine();
+    }
+
+    public boolean waiting() throws IOException {
+        return !inputReader.ready();
     }
 
     public void write(byte[] bytes) throws IOException {
@@ -71,4 +83,5 @@ public class WebServerSocket {
     public String getHostname() {
         return socket.getInetAddress().getHostName();
     }
+
 }

@@ -86,7 +86,6 @@ public class RequestHandler implements Runnable {
             socket.write(response.toBytes());
             logger.log(response);
             socket.close();
-            socket.listen();
         } catch (IOException e) {
             e.printStackTrace();
         }

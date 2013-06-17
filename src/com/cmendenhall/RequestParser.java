@@ -1,5 +1,6 @@
 package com.cmendenhall;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,11 +18,10 @@ public class RequestParser {
     }
 
     public Request makeRequest(String request) {
-        List<String> messageParts = split(request, "\r\n");
+        List<String> messageParts = split(request, "\n\n");
         try {
-            parseFirstLine(messageParts.get(0));
-            parseHeaders(messageParts.get(1));
-            body = messageParts.get(2);
+            parseHeaders(messageParts.get(0));
+            body = messageParts.get(1);
         } catch (ArrayIndexOutOfBoundsException e) {}
         return new Request(requestParameters, headers, body);
     }
@@ -35,11 +35,18 @@ public class RequestParser {
 
     private void parseHeaders(String headerString) {
         List<String> headerLines = split(headerString, "\n");
-        for (String headerLine : headerLines) {
+        String firstLine = headerLines.get(0);
+        parseFirstLine(firstLine);
+        for (String headerLine : headerLines.subList(1, headerLines.size())) {
             List<String> headerParameters = split(headerLine, "\\s*:\\s*");
 
             String headerName = headerParameters.get(0);
-            List<String> headerValues = split(headerParameters.get(1), "\\s*,\\s*");
+            List<String> rawHeaderValues = split(headerParameters.get(1), "\\s*,\\s*");
+            List<String> headerValues = new ArrayList<String>();
+
+            for (String value : rawHeaderValues) {
+                headerValues.add(value.trim());
+            }
 
             headers.put(headerName, headerValues);
         }

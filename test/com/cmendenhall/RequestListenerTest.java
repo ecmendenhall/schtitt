@@ -3,12 +3,11 @@ package com.cmendenhall;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import static junit.framework.Assert.assertEquals;
 
 public class RequestListenerTest {
     private WebServerSocket serverSocket;
@@ -43,6 +42,44 @@ public class RequestListenerTest {
         PrintWriter clientWriter = new PrintWriter(clientOutput, true);
         clientWriter.println("GET / HTTP/1.0\r\n\r\n");
 
+    }
+
+    @Test
+    public void readsOneLineRequest() throws Exception {
+        String testString = "GET / HTTP/1.0\n\n";
+        InputStream testStream = new ByteArrayInputStream(testString.getBytes("UTF-8"));
+
+        serverSocket = new WebServerSocket();
+        requestListener = new RequestListener(serverSocket);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(testStream));
+        serverSocket.setInputReader(reader);
+        assertEquals(testString, requestListener.readRawRequest());
+    }
+
+
+    @Test
+    public void readsTwoLineRequestWithHeader() throws Exception {
+        String testString = "GET / HTTP/1.0\nHost: localhost:5000\n\n";
+        InputStream testStream = new ByteArrayInputStream(testString.getBytes("UTF-8"));
+
+        serverSocket = new WebServerSocket();
+        requestListener = new RequestListener(serverSocket);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(testStream));
+        serverSocket.setInputReader(reader);
+        assertEquals(testString, requestListener.readRawRequest());
+    }
+
+
+    @Test
+    public void readsMultiLineRequest() throws Exception {
+        String testString = "POST / HTTP/1.0\nHost: localhost:5000\n\n?q=query\n\n";
+        InputStream testStream = new ByteArrayInputStream(testString.getBytes("UTF-8"));
+
+        serverSocket = new WebServerSocket();
+        requestListener = new RequestListener(serverSocket);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(testStream));
+        serverSocket.setInputReader(reader);
+        assertEquals(testString, requestListener.readRawRequest());
     }
 
 }
