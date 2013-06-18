@@ -8,14 +8,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class FileManager {
+public class RequestRouter {
     private String rootDirectory = System.getProperty("user.dir");
     private HashMap<String, String> specialPaths;
-    private ResourceLoader loader;
+    private StaticResourceLoader loader;
     private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss z");
 
-    public FileManager() {
-        loader = new ResourceLoader();
+    public RequestRouter() {
+        loader = new StaticResourceLoader();
         specialPaths = new HashMap<String, String>();
         registerSpecialPaths();
     }

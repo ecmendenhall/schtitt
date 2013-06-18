@@ -13,6 +13,11 @@ public class MessageLogger {
         return dateFormat.format(date) + "  ";
     }
 
+    public void printStartupMessage() {
+        System.out.println("Schtitt 0.9a");
+        log("Press c-C to exit.");
+    }
+
     public void log(Request request) {
         System.out.println(dateBlock() + "[REQUEST]   " + request);
     }

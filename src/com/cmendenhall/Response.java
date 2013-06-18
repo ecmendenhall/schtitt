@@ -22,6 +22,7 @@ public class Response {
         reasonPhrases.put(200, "OK");
         reasonPhrases.put(301, "Moved Permanently");
         reasonPhrases.put(302, "Moved Temporarily");
+        reasonPhrases.put(400, "Bad Request");
         reasonPhrases.put(404, "Not Found");
         reasonPhrases.put(418, "I'm a Teapot");
         reasonPhrases.put(500, "Server Error");
@@ -82,7 +83,7 @@ public class Response {
         return join(" ", httpVersion, statusCode.toString(), reasonPhrase);
     }
 
-    private String headersString() {
+    public String headersString() {
         List<String> headerStrings = new ArrayList<String>();
         for (String header : headers.keySet()) {
             String headerString = header + ": " + headers.get(header);

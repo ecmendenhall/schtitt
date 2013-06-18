@@ -6,13 +6,13 @@ import org.junit.Test;
 import static com.cmendenhall.Utils.join;
 import static junit.framework.Assert.assertEquals;
 
-public class ResourceLoaderTest {
-    private ResourceLoader resourceLoader;
+public class StaticResourceLoaderTest {
+    private StaticResourceLoader staticResourceLoader;
     private String pageContent;
 
     @Before
     public void setUp() {
-        resourceLoader = new ResourceLoader();
+        staticResourceLoader = new StaticResourceLoader();
         pageContent = join("\n", "<!DOCTYPE html>",
                                  "<html>",
                                  "    <head>",
@@ -35,7 +35,7 @@ public class ResourceLoaderTest {
 
     @Test
     public void resourceLoaderShouldReadPagesIntoStrings() {
-        assertEquals(pageContent, resourceLoader.loadResource("hello.html"));
+        assertEquals(pageContent, staticResourceLoader.loadResource("hello.html"));
     }
 
 }

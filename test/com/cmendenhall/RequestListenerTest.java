@@ -10,7 +10,7 @@ import java.net.Socket;
 import static junit.framework.Assert.assertEquals;
 
 public class RequestListenerTest {
-    private WebServerSocket serverSocket;
+    private HTTPServerSocket serverSocket;
     private RequestListener requestListener;
     private OutputRecorder recorder;
 
@@ -18,7 +18,7 @@ public class RequestListenerTest {
     public void setUp() throws UnsupportedEncodingException {
         recorder = new OutputRecorder();
         recorder.start();
-        serverSocket = new WebServerSocket();
+        serverSocket = new HTTPServerSocket();
         requestListener = new RequestListener(serverSocket);
     }
 
@@ -49,7 +49,7 @@ public class RequestListenerTest {
         String testString = "GET / HTTP/1.0\n\n";
         InputStream testStream = new ByteArrayInputStream(testString.getBytes("UTF-8"));
 
-        serverSocket = new WebServerSocket();
+        serverSocket = new HTTPServerSocket();
         requestListener = new RequestListener(serverSocket);
         BufferedReader reader = new BufferedReader(new InputStreamReader(testStream));
         serverSocket.setInputReader(reader);
@@ -62,7 +62,7 @@ public class RequestListenerTest {
         String testString = "GET / HTTP/1.0\nHost: localhost:5000\n\n";
         InputStream testStream = new ByteArrayInputStream(testString.getBytes("UTF-8"));
 
-        serverSocket = new WebServerSocket();
+        serverSocket = new HTTPServerSocket();
         requestListener = new RequestListener(serverSocket);
         BufferedReader reader = new BufferedReader(new InputStreamReader(testStream));
         serverSocket.setInputReader(reader);
@@ -75,7 +75,7 @@ public class RequestListenerTest {
         String testString = "POST / HTTP/1.0\nHost: localhost:5000\n\n?q=query\n\n";
         InputStream testStream = new ByteArrayInputStream(testString.getBytes("UTF-8"));
 
-        serverSocket = new WebServerSocket();
+        serverSocket = new HTTPServerSocket();
         requestListener = new RequestListener(serverSocket);
         BufferedReader reader = new BufferedReader(new InputStreamReader(testStream));
         serverSocket.setInputReader(reader);

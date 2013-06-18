@@ -16,14 +16,14 @@ import static com.cmendenhall.Utils.join;
 public class DirectoryResource extends File implements WebResource {
     private String mimeType;
     private String path;
-    private ResourceLoader loader;
+    private StaticResourceLoader loader;
 
     public DirectoryResource(String filePath) {
         super(filePath);
 
         mimeType = "text/html; charset=UTF-8";
         path = filePath;
-        loader = new ResourceLoader();
+        loader = new StaticResourceLoader();
     }
 
     public String mimeType() {

@@ -7,7 +7,7 @@ import static com.cmendenhall.Utils.join;
 import static junit.framework.Assert.assertEquals;
 
 public class DirectoryResourceTest {
-    private ResourceLoader loader = new ResourceLoader();
+    private StaticResourceLoader loader = new StaticResourceLoader();
     private DirectoryResource directory;
     private String indexPage;
 

@@ -7,18 +7,20 @@ import java.util.Date;
 
 public class RequestHandler implements Runnable {
     private RequestParser requestParser;
-    private FileManager fileManager;
+    private RequestRouter requestRouter;
     private MessageLogger logger;
+    private String rawRequest;
     private Request request;
     private Response response;
     private DateFormat dateFormat;
-    private WebServerSocket socket;
+    private HTTPClientSocket socket;
 
-    public RequestHandler(String rawRequest, WebServerSocket webServerSocket) {
-        socket = webServerSocket;
+    public RequestHandler(String rawRequestString, HTTPClientSocket HTTPClientSocket) {
+        rawRequest = rawRequestString;
+        socket = HTTPClientSocket;
         dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
         logger = new MessageLogger();
-        fileManager = new FileManager();
+        requestRouter = new RequestRouter();
         requestParser = new RequestParser();
         request = requestParser.makeRequest(rawRequest);
         response = new Response();
@@ -26,11 +28,8 @@ public class RequestHandler implements Runnable {
 
     public void run() {
         logger.log(request);
+        logger.log("Request headers:\n\n" + rawRequest);
         serveResponse();
-    }
-
-    public Request getRequest() {
-        return request;
     }
 
     private String getCurrentDate() {
@@ -39,7 +38,7 @@ public class RequestHandler implements Runnable {
     }
 
     private WebResource getRequestedFile() {
-        return fileManager.getWebResource(request.path());
+        return requestRouter.getWebResource(request.path());
     }
 
     private void addDefaultHeaders(Response response) {
@@ -48,19 +47,31 @@ public class RequestHandler implements Runnable {
         response.setHeader("Pragma", "no-cache");
     }
 
-    private void addFileData(Response response) {
+    private void addFileHeaders(Response response) {
         WebResource file = getRequestedFile();
         response.setHeader("Content-Type", file.mimeType());
         response.setHeader("Content-Length", file.contentLength());
         response.setHeader("Content-MD5", file.checkSum());
+    }
+
+    private void addFileData(Response response) {
+        WebResource file = getRequestedFile();
         response.body(file.binaryData());
     }
 
     public Response constructResponse() {
-        if (fileManager.resourceExists(request.path())) {
-            return constructOKResponse();
+        if (request.method().equals("GET")) {
+            if (requestRouter.resourceExists(request.path())) {
+                return constructOKResponse();
+            } else {
+                return constructNotFoundResponse();
+            }
+        } else if (request.method().equals("POST")) {
+            return constructPostResponse();
+        } else if (request.method().equals("HEAD")) {
+            return constructHeadResponse();
         } else {
-            return constructNotFoundResponse();
+            return constructBadRequestResponse();
         }
     }
 
@@ -68,7 +79,15 @@ public class RequestHandler implements Runnable {
         response.httpVersion("1.0");
         response.statusCode("200");
         addDefaultHeaders(response);
+        addFileHeaders(response);
         addFileData(response);
+        return response;
+    }
+
+    public Response constructMethodNotAllowedResponse() {
+        response.httpVersion("1.0");
+        response.statusCode("405");
+        addDefaultHeaders(response);
         return response;
     }
 
@@ -80,11 +99,35 @@ public class RequestHandler implements Runnable {
         return response;
     }
 
+    public Response constructHeadResponse() {
+        response.httpVersion("1.0");
+        response.statusCode("200");
+        response.body(new byte[0]);
+        addDefaultHeaders(response);
+        addFileHeaders(response);
+        return response;
+    }
+
+    public Response constructBadRequestResponse() {
+        response.httpVersion("1.0");
+        response.statusCode("400");
+        addDefaultHeaders(response);
+        return response;
+    }
+
+    public Response constructPostResponse() {
+        response.httpVersion("1.0");
+        return response;
+    }
+
     private void serveResponse() {
         constructResponse();
         try {
             socket.write(response.toBytes());
             logger.log(response);
+            logger.log("Response headers:\n\n" +
+                       response.statusLineString() + "\n" +
+                       response.headersString());
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();

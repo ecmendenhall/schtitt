@@ -3,20 +3,22 @@ package com.cmendenhall;
 import java.io.IOException;
 
 public class RequestListener {
-    private WebServerSocket socket;
+    private HTTPServerSocket socket;
+    private ThreadManager threadManager;
 
-    public RequestListener(WebServerSocket serverSocket) {
+    public RequestListener(HTTPServerSocket serverSocket) {
         socket = serverSocket;
+        threadManager = new ThreadManager();
     }
 
     public void listen() {
         try {
-            socket.listen();
+            HTTPClientSocket HTTPClientSocket = socket.listen();
             while (true) {
                 String rawRequest = readRawRequest();
                 if (!rawRequest.isEmpty()) {
-                    dispatchRequest(rawRequest);
-                    socket.listen();
+                    dispatchRequest(rawRequest, HTTPClientSocket);
+                    HTTPClientSocket = socket.listen();
                 }
             }
         } catch (IOException e) {
@@ -34,13 +36,12 @@ public class RequestListener {
                 break;
             }
         }
-        System.out.println(rawRequest.toString());
         return rawRequest.toString();
     }
 
-    private void dispatchRequest(String rawRequest) {
-        RequestHandler handler = new RequestHandler(rawRequest, socket);
-        new Thread(handler).run();
+    private void dispatchRequest(String rawRequest, HTTPClientSocket HTTPClientSocket) {
+        RequestHandler handler = new RequestHandler(rawRequest, HTTPClientSocket);
+        threadManager.execute(handler);
     }
 
 }

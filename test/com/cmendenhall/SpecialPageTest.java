@@ -10,14 +10,14 @@ import static junit.framework.Assert.assertEquals;
 public class SpecialPageTest {
     private SpecialPage hello;
     private String helloContent;
-    private ResourceLoader loader;
+    private StaticResourceLoader loader;
     private OutputRecorder recorder;
 
     @Before
     public void setUp() throws UnsupportedEncodingException {
         recorder = new OutputRecorder();
         recorder.start();
-        loader = new ResourceLoader();
+        loader = new StaticResourceLoader();
         hello = new SpecialPage("hello.html", "/hello");
         helloContent = loader.loadResource("hello.html");
     }

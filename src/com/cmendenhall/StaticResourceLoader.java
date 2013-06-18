@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class ResourceLoader {
+public class StaticResourceLoader {
 
     public String loadResource(String resource) {
         ClassLoader loader = getClass().getClassLoader();

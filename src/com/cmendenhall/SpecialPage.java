@@ -9,12 +9,12 @@ import java.util.HashMap;
 
 public class SpecialPage implements WebResource {
     private String pageContent;
-    private ResourceLoader loader;
+    private StaticResourceLoader loader;
     private String url;
     private HashMap<String, String> pageParameters;
 
     public SpecialPage(String pageResource, String path) {
-        loader = new ResourceLoader();
+        loader = new StaticResourceLoader();
         url = path;
         pageParameters = new HashMap<String, String>();
         pageContent = renderPage(pageResource, pageParameters);
@@ -22,7 +22,7 @@ public class SpecialPage implements WebResource {
 
 
     public SpecialPage(String pageResource, String path, HashMap<String, String> params) {
-        loader = new ResourceLoader();
+        loader = new StaticResourceLoader();
         url = path;
         pageParameters = params;
         pageContent = renderPage(pageResource, pageParameters);

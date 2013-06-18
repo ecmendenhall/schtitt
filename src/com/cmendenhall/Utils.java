@@ -26,6 +26,7 @@ public class Utils {
     }
 
     public static byte[] join(byte[]... arrays) {
+
         Integer totalLength = 0;
         for (byte[] array : arrays) {
             totalLength += array.length;

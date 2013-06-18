@@ -1,8 +1,6 @@
 package com.cmendenhall;
 
-import java.io.IOException;
-
-public class MockWebServerSocket extends WebServerSocket {
+public class MockWebServerSocket extends HTTPServerSocket {/*
     public String writtenString;
     public byte[] writtenBytes;
 
@@ -31,6 +29,6 @@ public class MockWebServerSocket extends WebServerSocket {
 
     @Override
     public void listen() throws IOException {
-    }
+    }*/
 
 }

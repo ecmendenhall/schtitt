@@ -4,17 +4,14 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class WebServerSocket {
+public class HTTPServerSocket {
     private ServerSocket serverSocket;
-    private Socket socket;
     private InputStream input;
     private BufferedReader inputReader;
-    private PrintWriter stringWriter;
-    private OutputStream output;
     private Integer port;
     private MessageLogger logger;
 
-    public WebServerSocket() {
+    public HTTPServerSocket() {
         try {
             logger = new MessageLogger();
             serverSocket = new ServerSocket(0);
@@ -25,7 +22,7 @@ public class WebServerSocket {
         }
     }
 
-    public WebServerSocket(Integer listenPort) {
+    public HTTPServerSocket(Integer listenPort) {
         try {
             logger = new MessageLogger();
             port = listenPort;
@@ -36,24 +33,19 @@ public class WebServerSocket {
         }
     }
 
-    public BufferedReader getInputReader() {
-        return inputReader;
-    }
-
     public void setInputReader(BufferedReader inputReader) {
         this.inputReader = inputReader;
     }
 
-    public void listen() throws IOException {
-        socket = serverSocket.accept();
-        getIOStreams();
+    public HTTPClientSocket listen() throws IOException {
+        Socket socket = serverSocket.accept();
+        getInputStreams(socket);
+        return new HTTPClientSocket(socket);
     }
 
-    public void getIOStreams() throws IOException {
+    public void getInputStreams(Socket socket) throws IOException {
         input = socket.getInputStream();
         inputReader = new BufferedReader(new InputStreamReader(input));
-        output = socket.getOutputStream();
-        stringWriter = new PrintWriter(output, true);
     }
 
     public String readLine() throws IOException {
@@ -64,24 +56,7 @@ public class WebServerSocket {
         return !inputReader.ready();
     }
 
-    public void write(byte[] bytes) throws IOException {
-        output.write(bytes);
-    }
-
-    public void write(String string) throws IOException {
-        stringWriter.println(string);
-    }
-
     public Integer getPort() {
         return port;
     }
-
-    public void close() throws IOException {
-        socket.close();
-    }
-
-    public String getHostname() {
-        return socket.getInetAddress().getHostName();
-    }
-
 }
