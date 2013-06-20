@@ -92,8 +92,24 @@ public class RequestParserTest {
     
     @Test
     public void requestParserShouldReadBody() {
-        String body = "<html><head></head><body><h1>Howling Fantods</h1></body></html>";
-        request = requestParser.makeRequest("GET / HTTP/1.0\nAccept: text/html\n\n" + body + "\n\n");
+        String body = "one=1&two=2&three=3";
+        request = requestParser.makeRequest("POST /numbers HTTP/1.0\nAccept: text/html\n\n" + body + "\n\n");
         assertEquals(body, request.body());
+    }
+
+    @Test
+    public void requestParserShouldStorePOSTParameters() {
+        String body = "one=1&two=2&three=3";
+        request = requestParser.makeRequest("POST /numbers HTTP/1.0\nAccept: text/html\n\n" + body + "\n\n");
+        assertEquals("1", request.getParameter("one"));
+        assertEquals("2", request.getParameter("two"));
+        assertEquals("3", request.getParameter("three"));
+    }
+
+    @Test
+    public void requestParserShouldParseQueryStrings() {
+        request = requestParser.makeRequest("GET /?query=hovercraft+eels HTTP/1.0\n\n\n");
+        assertEquals("/", request.path());
+        assertEquals("hovercraft eels", request.getParameter("query"));
     }
 }

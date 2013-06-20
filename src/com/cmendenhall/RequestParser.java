@@ -22,14 +22,32 @@ public class RequestParser {
         try {
             parseHeaders(messageParts.get(0));
             body = messageParts.get(1);
+            parseParameters(body);
         } catch (ArrayIndexOutOfBoundsException e) {}
         return new Request(requestParameters, headers, body);
+    }
+
+    private void parsePath(String fullPath) {
+        List<String> pathParts = split(fullPath, "\\?");
+        String path = pathParts.get(0);
+        requestParameters.put("path", path);
+        try {
+            String queryString = pathParts.get(1);
+            parseParameters(queryString);
+        } catch (ArrayIndexOutOfBoundsException e) {}
+    }
+
+    private void parseParameters(String queryString) {
+        HashMap<String, String> queryStringParameters = ParameterDecoder.getParameters(queryString);
+        for (String parameter : queryStringParameters.keySet()) {
+            requestParameters.put(parameter, queryStringParameters.get(parameter));
+        }
     }
 
     private void parseFirstLine(String firstLine) {
         List<String> requestParameterList = split(firstLine, "\\s+");
         requestParameters.put("method", requestParameterList.get(0));
-        requestParameters.put("path", requestParameterList.get(1));
+        parsePath(requestParameterList.get(1));
         requestParameters.put("httpVersion", requestParameterList.get(2));
     }
 

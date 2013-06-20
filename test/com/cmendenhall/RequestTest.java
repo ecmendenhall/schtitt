@@ -18,6 +18,7 @@ public class RequestTest {
         requestParameters.put("method", "GET");
         requestParameters.put("path", "/");
         requestParameters.put("httpVersion", "HTTP/1.0");
+        requestParameters.put("query", "hovercraft eels");
 
         HashMap<String, List<String>> headerParameters = new HashMap<String, List<String>>();
         headerParameters.put("Accept", Arrays.asList("text/html", "application/xhtml+xml"));
@@ -49,6 +50,11 @@ public class RequestTest {
     @Test
     public void requestShouldPrintReadably() {
         assertEquals("GET /", request.toString());
+    }
+
+    @Test
+    public void requestReturnsQueryStringParameters() {
+        assertEquals("hovercraft eels", request.getParameter("query"));
     }
 
 }
