@@ -3,10 +3,7 @@ package com.cmendenhall;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.List;
-
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertTrue;
 
 public class RequestRouterTest {
     private RequestRouter requestRouter;

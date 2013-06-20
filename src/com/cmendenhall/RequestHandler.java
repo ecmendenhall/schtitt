@@ -1,9 +1,6 @@
 package com.cmendenhall;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class RequestHandler implements Runnable {
     private RequestParser requestParser;

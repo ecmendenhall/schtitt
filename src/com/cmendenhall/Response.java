@@ -20,10 +20,13 @@ public class Response {
     public Response() {
         reasonPhrases = new HashMap<Integer, String>();
         reasonPhrases.put(200, "OK");
+        reasonPhrases.put(201, "Created");
         reasonPhrases.put(301, "Moved Permanently");
         reasonPhrases.put(302, "Moved Temporarily");
+        reasonPhrases.put(303, "See Other");
         reasonPhrases.put(400, "Bad Request");
         reasonPhrases.put(404, "Not Found");
+        reasonPhrases.put(405, "Method not Allowed");
         reasonPhrases.put(418, "I'm a Teapot");
         reasonPhrases.put(500, "Server Error");
 

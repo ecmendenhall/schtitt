@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.cmendenhall.Utils.join;
 import static junit.framework.Assert.assertEquals;
 
 public class RequestParserTest {
