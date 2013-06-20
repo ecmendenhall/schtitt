@@ -8,62 +8,92 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class RequestRouter {
-    private String rootDirectory = System.getProperty("user.dir");
-    private HashMap<String, String> specialPaths;
+    private HashMap<String, HashMap<String, PageHandler>> routes;
     private StaticResourceLoader loader;
-    private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss z");
+    private FileManager fileManager;
+    private PageHandler rootDirectory, helloPage, timePage, formGet, formPost, notFound, directoryPage, filePage, list;
 
     public RequestRouter() {
         loader = new StaticResourceLoader();
-        specialPaths = new HashMap<String, String>();
-        registerSpecialPaths();
+        fileManager = new FileManager();
+        createRouteMap();
+        loadHandlers();
+        registerRoutes();
     }
 
-    private void registerSpecialPaths() {
-        specialPaths.put("/hello", "hello.html");
-        specialPaths.put("/time", "time.html");
-        specialPaths.put("/form", "form.html");
-        specialPaths.put("/list", "list.html");
+    private void createRouteMap() {
+        routes = new HashMap<String, HashMap<String, PageHandler>>();
+        routes.put("GET", new HashMap<String, PageHandler>());
+        routes.put("POST", new HashMap<String, PageHandler>());
+        routes.put("PUT", new HashMap<String, PageHandler>());
     }
 
-    public List<String> listDirectory(String path) {
-        File filePath = new File(path);
-        return Arrays.asList(filePath.list());
+    public void createRoute(String method, String route, PageHandler handler) {
+        HashMap<String, PageHandler> methodRoutes = routes.get(method);
+        methodRoutes.put(route, handler);
     }
 
-    private boolean isDirectory(String path) {
-        File endpoint = new File(path);
-        return endpoint.isDirectory();
+    private void loadHandlers() {
+        rootDirectory = new RootDirectoryHandler();
+        helloPage     = new HelloPageHandler();
+        timePage      = new TimePageHandler();
+        formGet       = new FormHandler("GET");
+        formPost      = new FormHandler("POST");
+        notFound      = new NotFoundHandler();
+        directoryPage = new DirectoryHandler();
+        filePage      = new FileHandler();
+        list          = new ListHandler();
     }
 
-    public boolean resourceExists(String path) {
-        if (specialPaths.containsKey(path) || path.contentEquals("/")) return true;
-        File file = new File(rootDirectory + path);
-        return file.exists();
+    private void registerRoutes() {
+        createRoute("GET",  "/",            rootDirectory);
+        createRoute("GET",  "/hello",       helloPage);
+        createRoute("GET",  "/time",        timePage);
+        createRoute("GET",  "/form",        formGet);
+        createRoute("GET",  "/list",        list);
+        createRoute("POST", "/form",        formPost);
+        createRoute("PUT",  "/form",        formPost);
     }
 
-    public WebResource getWebResource(String path) {
-        if (specialPaths.containsKey(path)) {
-            String resource = specialPaths.get(path);
-            HashMap<String, String> params = new HashMap<String, String>();
-            Date now = new Date();
-            params.put("time", dateFormat.format(now));
-            params.put("stylesheet", loader.loadResource("style.css"));
-            return new SpecialPage(resource, path, params);
+    public boolean routeRegistered(String method, String path) {
+        return routes.get(method).containsKey(path);
+    }
+
+    public boolean pathExists(String method, String path) {
+        return fileManager.resourceExists(path);
+    }
+
+    public WebResource getResource(String method, String path) {
+        return getResource(method, path, new HashMap<String, String>());
+    }
+
+    public WebResource getResource(String method, String path, HashMap<String, String> queryParameters) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("stylesheet", loader.loadResource("style.css"));
+        params.put("rootdirectory", System.getProperty("user.dir"));
+        params.put("filepath", path);
+
+        for (String queryParameter : queryParameters.keySet()) {
+            params.put(queryParameter,
+                       queryParameters.get(queryParameter));
         }
-        if (path.contentEquals("/")) {
-            return new DirectoryResource((rootDirectory.isEmpty()) ? "." : rootDirectory);
+
+        if (routeRegistered(method, path)) {
+            return routes.get(method).get(path).render(params);
         }
-        if (!resourceExists(path)) {
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("stylesheet", loader.loadResource("style.css"));
-            return new SpecialPage("404.html", path, params);
+
+        if (!fileManager.resourceExists(path)) {
+            return notFound.render(params);
         }
-        if (isDirectory(rootDirectory + path)) {
-            return new DirectoryResource(rootDirectory + path);
+
+        if (fileManager.isDirectory(path)) {
+            return directoryPage.render(params);
         } else {
-            return new FileResource(rootDirectory + path);
+            return filePage.render(params);
         }
+
     }
+
 }
