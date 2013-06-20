@@ -16,6 +16,7 @@ public class ArgumentParserTest {
     public void setUp() throws UnsupportedEncodingException {
         argumentParser = new ArgumentParser();
         recorder = new OutputRecorder();
+        recorder.start();
     }
 
     @Test
