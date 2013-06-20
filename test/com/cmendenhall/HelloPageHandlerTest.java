@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class HelloPageHandlerTest {
     HelloPageHandler handler;
@@ -39,6 +40,7 @@ public class HelloPageHandlerTest {
     @Test
     public void helloHandlerShouldRenderHelloPage() {
         WebResource helloPage = handler.render(params);
-        assertEquals("4JdUu37aiaBLXtVCq4yDRw==", helloPage.checkSum());
+        String helloPageContent = helloPage.stringData();
+        assertTrue(helloPageContent.contains("Schtitt 0.9a"));
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class DirectoryHandlerTest {
     DirectoryHandler handler;
@@ -22,7 +23,8 @@ public class DirectoryHandlerTest {
     @Test
     public void directoryHandlerReturnsDirectoryResource() {
         WebResource directoryPage = handler.render(params);
-        assertEquals(directoryPage.checkSum(), "syAFkiAF+el/9NlAf/iSfg==");
+        String directoryPageContent  = directoryPage.stringData();
+        assertTrue(directoryPageContent.contains("slip.gif"));
     }
 
 }

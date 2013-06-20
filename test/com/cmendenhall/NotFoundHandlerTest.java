@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class NotFoundHandlerTest {
     NotFoundHandler handler;
@@ -41,7 +42,8 @@ public class NotFoundHandlerTest {
     @Test
     public void notFoundHandlerShouldRenderFourOhFourPage() {
         WebResource notFoundPage = handler.render(params);
-        assertEquals("lQ4g8A5pRqp3RL4gQLjgRQ==", notFoundPage.checkSum());
+        String notFoundPageContent = notFoundPage.stringData();
+        assertTrue(notFoundPageContent.contains("404: File not found"));
     }
 
 }
