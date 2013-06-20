@@ -8,12 +8,10 @@ import java.net.Socket;
 public class HTTPClientSocket {
     private Socket socket;
     private OutputStream output;
-    private PrintWriter stringWriter;
 
     public HTTPClientSocket(Socket clientSocket) throws IOException {
         socket = clientSocket;
         output = socket.getOutputStream();
-        stringWriter = new PrintWriter(output, true);
     }
 
     public void write(byte[] bytes) throws IOException {
