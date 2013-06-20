@@ -13,12 +13,12 @@ public class RequestListener {
 
     public void listen() {
         try {
-            HTTPClientSocket HTTPClientSocket = socket.listen();
+            HTTPClientSocket httpClientSocket = socket.listen();
             while (true) {
                 String rawRequest = readRawRequest();
                 if (!rawRequest.isEmpty()) {
-                    dispatchRequest(rawRequest, HTTPClientSocket);
-                    HTTPClientSocket = socket.listen();
+                    dispatchRequest(rawRequest, httpClientSocket);
+                    httpClientSocket = socket.listen();
                 }
             }
         } catch (IOException e) {
@@ -39,8 +39,8 @@ public class RequestListener {
         return rawRequest.toString();
     }
 
-    private void dispatchRequest(String rawRequest, HTTPClientSocket HTTPClientSocket) {
-        RequestHandler handler = new RequestHandler(rawRequest, HTTPClientSocket);
+    private void dispatchRequest(String rawRequest, HTTPClientSocket httpClientSocket) {
+        RequestHandler handler = new RequestHandler(rawRequest, httpClientSocket);
         threadManager.execute(handler);
     }
 
