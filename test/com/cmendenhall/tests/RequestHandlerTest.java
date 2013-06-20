@@ -47,6 +47,7 @@ public class RequestHandlerTest {
         recorder.discardFirstNStrings(1);
         String logged = recorder.popFirstOutput();
         assertTrue(logged.contains(rawRequest));
+
     }
 
     @Test
