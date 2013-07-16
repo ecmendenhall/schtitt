@@ -73,3 +73,6 @@ h2.directoryheader {
     font-size: 28px;
     line-height: 28px;
 }
+.hidden {
+    display: none;
+}
