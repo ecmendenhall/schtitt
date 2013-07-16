@@ -1,5 +1,7 @@
 package com.cmendenhall;
 
+import java.util.HashMap;
+
 public interface WebResource {
 
     public String mimeType();
@@ -8,5 +10,6 @@ public interface WebResource {
     public String checkSum();
     public String stringData();
     public byte[] binaryData();
+    public HashMap<String, String> customHeaders();
 
 }
