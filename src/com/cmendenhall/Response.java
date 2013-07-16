@@ -21,8 +21,9 @@ public class Response {
         reasonPhrases = new HashMap<Integer, String>();
         reasonPhrases.put(200, "OK");
         reasonPhrases.put(201, "Created");
+        reasonPhrases.put(206, "Partial Content");
         reasonPhrases.put(301, "Moved Permanently");
-        reasonPhrases.put(302, "Moved Temporarily");
+        reasonPhrases.put(302, "Found");
         reasonPhrases.put(303, "See Other");
         reasonPhrases.put(400, "Bad Request");
         reasonPhrases.put(404, "Not Found");

@@ -5,24 +5,40 @@ import java.io.IOException;
 public class RequestHandler implements Runnable {
     private RequestParser requestParser;
     private ResponseBuilder responseBuilder;
-    private MessageLogger logger;
     private String rawRequest;
     private Request request;
     private HTTPClientSocket socket;
+    private MessageLogger logger;
 
-    public RequestHandler(String rawRequestString, HTTPClientSocket httpClientSocket) {
-        rawRequest = rawRequestString;
+    public RequestHandler(HTTPClientSocket httpClientSocket) {
         socket = httpClientSocket;
-        logger = new MessageLogger();
         requestParser = new RequestParser();
         responseBuilder = new ResponseBuilder();
-        request = requestParser.makeRequest(rawRequest);
+        logger = new MessageLogger();
     }
 
     public void run() {
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        try {
+            rawRequest = readRawRequest();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        request = requestParser.makeRequest(rawRequest);
         logger.log(request);
         logger.log("Request headers:\n\n" + rawRequest);
         serveResponse();
+    }
+
+    public String readRawRequest() throws IOException {
+        StringBuilder rawRequest = new StringBuilder();
+        char current;
+
+        while ((current = (char)socket.read()) != -1) {
+            rawRequest.append("" + current);
+            if (socket.waiting() || socket.isClosed()) break;
+        }
+        return rawRequest.toString();
     }
 
     public Response getResponse() {
@@ -35,13 +51,22 @@ public class RequestHandler implements Runnable {
         Response response = getResponse();
         try {
             socket.write(response.toBytes());
+            socket.flush();
             logger.log(response);
             logger.log("Response headers:\n\n" +
-                       response.statusLineString() + "\n" +
-                       response.headersString() + "\n" );
+                              response.statusLineString() + "\n" +
+                              response.headersString() + "\n" );
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (!socket.isClosed()) socket.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

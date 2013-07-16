@@ -94,14 +94,14 @@ public class RequestParserTest {
     @Test
     public void requestParserShouldReadBody() {
         String body = "one=1&two=2&three=3";
-        request = requestParser.makeRequest("POST /numbers HTTP/1.0\nAccept: text/html\n\n" + body + "\n\n");
+        request = requestParser.makeRequest("POST /numbers HTTP/1.0\nAccept: text/html\r\n\r\n" + body + "\r\n\r\n");
         assertEquals(body, request.body());
     }
 
     @Test
     public void requestParserShouldStorePOSTParameters() {
         String body = "one=1&two=2&three=3";
-        request = requestParser.makeRequest("POST /numbers HTTP/1.0\nAccept: text/html\n\n" + body + "\n\n");
+        request = requestParser.makeRequest("POST /numbers HTTP/1.0\nAccept: text/html\r\n\r\n" + body + "\r\n\r\n");
         assertEquals("1", request.getParameter("one"));
         assertEquals("2", request.getParameter("two"));
         assertEquals("3", request.getParameter("three"));

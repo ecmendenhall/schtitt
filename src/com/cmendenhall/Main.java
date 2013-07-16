@@ -2,9 +2,9 @@ package com.cmendenhall;
 
 public class Main {
     private static ArgumentParser argumentParser = new ArgumentParser();
-    private static MessageLogger logger = new MessageLogger();
     private static String rootDirectory = null;
     private static Integer port = 0;
+    private static MessageLogger logger = new MessageLogger();
 
     public static void main(String[] args) {
         logger.printStartupMessage();
