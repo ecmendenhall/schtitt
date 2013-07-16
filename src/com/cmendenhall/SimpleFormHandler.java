@@ -2,15 +2,11 @@ package com.cmendenhall;
 
 import java.util.HashMap;
 
-public class FormHandler implements PageHandler {
+public class SimpleFormHandler implements PageHandler {
     private String method;
     private Sanitizer sanitizer = new Sanitizer();
 
-    public FormHandler() {
-        method = "GET";
-    }
-
-    public FormHandler(String httpMethod) {
+    public SimpleFormHandler(String httpMethod) {
         method = httpMethod;
     }
 
@@ -22,10 +18,8 @@ public class FormHandler implements PageHandler {
                 KeyValueStore.put(param, sanitized);
             }
             KeyValueStore.save();
-            return new Redirect("/list");
-        } else {
-            return Template.render("form.html", params);
         }
+        params.put("data", KeyValueStore.get("data"));
+        return Template.render("simpleform.html", params);
     }
-
 }

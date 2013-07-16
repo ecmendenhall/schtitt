@@ -5,12 +5,12 @@ import java.util.HashMap;
 
 public class RequestRouter {
     private HashMap<String, HashMap<String, PageHandler>> routes;
-    private StaticResourceLoader loader;
     private FileManager fileManager;
-    private PageHandler rootDirectory, helloPage, timePage, formGet, formPost, notFound, directoryPage, filePage, list;
+    private PageHandler rootDirectory, helloPage, timePage, formGet, formPost,
+                        notFound, directoryPage, filePage, list, parameters,
+                        redirect, simpleFormGet, simpleFormPost;
 
     public RequestRouter() {
-        loader = new StaticResourceLoader();
         fileManager = new FileManager();
         createRouteMap();
         loadHandlers();
@@ -30,25 +30,37 @@ public class RequestRouter {
     }
 
     private void loadHandlers() {
-        rootDirectory = new RootDirectoryHandler();
-        helloPage     = new HelloPageHandler();
-        timePage      = new TimePageHandler();
-        formGet       = new FormHandler("GET");
-        formPost      = new FormHandler("POST");
-        notFound      = new NotFoundHandler();
-        directoryPage = new DirectoryHandler();
-        filePage      = new FileHandler();
-        list          = new ListHandler();
+        rootDirectory  = new RootDirectoryHandler();
+        helloPage      = new HelloPageHandler();
+        timePage       = new TimePageHandler();
+        formGet        = new FormHandler("GET");
+        formPost       = new FormHandler("POST");
+        notFound       = new NotFoundHandler();
+        directoryPage  = new DirectoryHandler();
+        filePage       = new FileHandler();
+        list           = new ListHandler();
+        parameters     = new ParametersPageHandler();
+        redirect       = new RedirectHandler("http://localhost:5000/");
+        simpleFormGet  = new SimpleFormHandler("GET");
+        simpleFormPost = new SimpleFormHandler("POST");
     }
 
     private void registerRoutes() {
         createRoute("GET",  "/",            rootDirectory);
         createRoute("GET",  "/hello",       helloPage);
         createRoute("GET",  "/time",        timePage);
-        createRoute("GET",  "/form",        formGet);
         createRoute("GET",  "/list",        list);
-        createRoute("POST", "/form",        formPost);
-        createRoute("PUT",  "/form",        formPost);
+        createRoute("GET",  "/parameters",  parameters);
+
+        createRoute("GET",  "/form",        simpleFormGet);
+        createRoute("POST", "/form",        simpleFormPost);
+        createRoute("PUT",  "/form",        simpleFormPost);
+
+        createRoute("GET",  "/listform",    formGet);
+        createRoute("POST", "/listform",    formPost);
+        createRoute("PUT",  "/listform",    formPost);
+
+        createRoute("GET",  "/redirect",    redirect);
     }
 
     public boolean routeRegistered(String method, String path) {
@@ -65,7 +77,7 @@ public class RequestRouter {
 
     public WebResource getResource(String method, String path, HashMap<String, String> queryParameters) {
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("stylesheet", loader.loadResource("style.css"));
+        params.put("stylesheet", StaticResourceCache.loadResource("style.css"));
         params.put("rootdirectory", System.getProperty("user.dir"));
         params.put("filepath", path);
 
