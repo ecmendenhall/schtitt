@@ -5,10 +5,12 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 public class Page implements WebResource {
     private String pageContent;
     private String url;
+    private HashMap<String, String> customHeaders = new HashMap<String, String>();
 
     public Page(String content, String path) {
         url = path;
@@ -47,5 +49,9 @@ public class Page implements WebResource {
             e.printStackTrace();
             return new byte[0];
         }
+    }
+
+    public HashMap<String, String> customHeaders() {
+        return customHeaders;
     }
 }
