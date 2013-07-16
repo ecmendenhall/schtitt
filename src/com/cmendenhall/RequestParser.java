@@ -18,11 +18,16 @@ public class RequestParser {
     }
 
     public Request makeRequest(String request) {
-        List<String> messageParts = split(request, "\n\n");
+        List<String> messageParts = split(request, "\r\n\r\n");
         try {
             parseHeaders(messageParts.get(0));
             body = messageParts.get(1);
-            parseParameters(body);
+            if (requestParameters.get("method").equals("POST") ||
+                requestParameters.get("method").equals("PUT")) {
+                requestParameters.put("postbody", body);
+                parseParameters(body);
+            }
+
         } catch (ArrayIndexOutOfBoundsException e) {}
         return new Request(requestParameters, headers, body);
     }
@@ -64,6 +69,7 @@ public class RequestParser {
 
             for (String value : rawHeaderValues) {
                 headerValues.add(value.trim());
+                requestParameters.put(headerName, value);
             }
 
             headers.put(headerName, headerValues);
