@@ -30,13 +30,12 @@ public class ParameterDecoder {
     }
 
     public static HashMap<String, String> getParameters(String queryString) {
-        queryString = decode(queryString);
         HashMap<String, String> fieldValues = new HashMap<String, String>();
         List<String> parameters = split(queryString, "&");
 
         for (String parameter : parameters) {
             List<String> values = split(parameter, "=");
-            fieldValues.put(values.get(0), values.get(1));
+            fieldValues.put(decode(values.get(0)), decode(values.get(1)));
         }
 
         return fieldValues;
