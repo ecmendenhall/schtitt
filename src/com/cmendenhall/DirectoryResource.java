@@ -13,17 +13,16 @@ import java.util.List;
 
 import static com.cmendenhall.Utils.join;
 
-public class DirectoryResource extends File implements WebResource {
+public class DirectoryResource implements WebResource {
     private String mimeType;
     private String path;
-    private StaticResourceLoader loader;
+    private File directory;
+    private HashMap<String, String> customHeaders = new HashMap<String, String>();
 
     public DirectoryResource(String filePath) {
-        super(filePath);
-
+        directory = FileManager.getFile(filePath);
         mimeType = "text/html; charset=UTF-8";
-        path = filePath;
-        loader = new StaticResourceLoader();
+        path = directory.getPath();
     }
 
     public String mimeType() {
@@ -50,8 +49,8 @@ public class DirectoryResource extends File implements WebResource {
     private String makePage() {
         String template = makeTemplate();
         HashMap<String, String> pageParameters = new HashMap<String, String>();
-        pageParameters.put("stylesheet", loader.loadResource("style.css"));
-        pageParameters.put("directorypath", getPath());
+        pageParameters.put("stylesheet", StaticResourceCache.loadResource("style.css"));
+        pageParameters.put("directorypath", directory.getPath());
         return renderPage(template, pageParameters);
     }
 
@@ -81,10 +80,10 @@ public class DirectoryResource extends File implements WebResource {
     }
 
     private String makeIndexEntries() {
-        File[] files = listFiles();
+        File[] files = directory.listFiles();
         List<String> listEntries = new ArrayList<String>();
 
-        if (path != System.getProperty("user.dir")) listEntries.add(makeEntry("/../", "[ .. ]", ""));
+        if (path != System.getProperty("user.dir")) listEntries.add(makeEntry("../", "[ .. ]", ""));
         for(File file : files) {
             String fileName = (file.isDirectory()) ? file.getName() + "/" : file.getName();
             String filePath = (file.isDirectory()) ? file.getName() + "/" : file.getName();
@@ -96,7 +95,7 @@ public class DirectoryResource extends File implements WebResource {
     }
 
     private String makeEntry(String filePath, String fileName, String className) {
-        MessageFormat entryElement = new MessageFormat("      <li class=''{0}''><a href=''{1}''>{2}</a></li>");
+        MessageFormat entryElement = new MessageFormat("      <li class=\"{0}\"><a href=\"{1}\">{2}</a></li>");
         String[] name = { className, filePath, fileName };
         return entryElement.format(name);
     }
@@ -122,5 +121,10 @@ public class DirectoryResource extends File implements WebResource {
             e.printStackTrace();
             return new byte[0];
         }
+    }
+
+    @Override
+    public HashMap<String, String> customHeaders() {
+        return customHeaders;
     }
 }

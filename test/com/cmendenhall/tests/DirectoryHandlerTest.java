@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 public class DirectoryHandlerTest {

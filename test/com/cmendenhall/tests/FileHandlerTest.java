@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-import static junit.framework.Assert.assertEquals;
-
 public class FileHandlerTest {
     FileHandler handler;
     HashMap<String, String> params;

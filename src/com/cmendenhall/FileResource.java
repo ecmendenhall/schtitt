@@ -10,15 +10,16 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
-public class FileResource extends File implements WebResource {
+public class FileResource implements WebResource {
     private HashMap<String, String> mimeTypePrefixes;
     private String mimeType;
     private String path;
+    private File file;
+    private HashMap<String, String> customHeaders = new HashMap<String, String>();
 
     public FileResource(String filePath) {
-        super(filePath);
-
-        path = getPath();
+        file = FileManager.getFile(filePath);
+        path = file.getPath();
 
         String fileType = getFileType(filePath);
 
@@ -70,7 +71,7 @@ public class FileResource extends File implements WebResource {
     }
 
     public String contentLength() {
-        return "" + this.length();
+        return "" + this.file.length();
     }
 
     public String checkSum() {
@@ -98,7 +99,7 @@ public class FileResource extends File implements WebResource {
 
     public byte[] binaryData() {
         FileInputStream byteStream;
-        byte[] bytes = new byte[(int) this.length()];
+        byte[] bytes = new byte[(int) this.file.length()];
         try {
             byteStream = new FileInputStream(path);
             int currentByte;
@@ -111,5 +112,9 @@ public class FileResource extends File implements WebResource {
             e.printStackTrace();
         }
         return bytes;
+    }
+
+    public HashMap<String, String> customHeaders() {
+        return customHeaders;
     }
 }

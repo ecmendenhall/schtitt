@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import static com.cmendenhall.Utils.join;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FileResourceTest {
     private FileResource png;
@@ -120,6 +121,11 @@ public class FileResourceTest {
     @Test
     public void filesReturnCorrectContentLengths() {
         assertEquals("194", "" + html.contentLength());
+    }
+
+    @Test
+    public void fileResourceHasNoCustomHeaders() {
+        assertTrue(html.customHeaders().isEmpty());
     }
 
 }
