@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.io.*;
 import java.util.HashMap;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 public class HelloPageHandlerTest {

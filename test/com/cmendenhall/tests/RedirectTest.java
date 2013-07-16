@@ -16,12 +16,17 @@ public class RedirectTest {
     }
 
     @Test
-    public void redirectStoresOnlyUrlInformation() {
+    public void redirectStoresCorrectUrlInformation() {
         assertEquals("", redirect.stringData());
-        assertEquals(null, redirect.contentLength());
-        assertEquals(null, redirect.mimeType());
-        assertEquals(null, redirect.checkSum());
+        assertEquals("0", redirect.contentLength());
+        assertEquals("text/html", redirect.mimeType());
+        assertEquals("", redirect.checkSum());
         assertArrayEquals(new byte[0], redirect.binaryData());
         assertEquals("/list", redirect.url());
+    }
+
+    @Test
+    public void redirectStoresCustomLocationHeader() {
+        assertEquals("/list", redirect.customHeaders().get("Location"));
     }
 }

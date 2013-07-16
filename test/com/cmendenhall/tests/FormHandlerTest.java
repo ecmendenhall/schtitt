@@ -1,6 +1,7 @@
 package com.cmendenhall.tests;
 
 import com.cmendenhall.FormHandler;
+import com.cmendenhall.KeyValueStore;
 import com.cmendenhall.WebResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,10 +9,12 @@ import org.junit.Test;
 import java.io.*;
 import java.util.HashMap;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class FormHandlerTest {
-    FormHandler handler;
+    FormHandler getHandler;
+    FormHandler postHandler;
     HashMap<String, String> params;
 
     private String readFile(String path) throws FileNotFoundException {
@@ -32,16 +35,30 @@ public class FormHandlerTest {
 
     @Before
     public void setUp() throws FileNotFoundException {
-        handler = new FormHandler();
+        getHandler = new FormHandler();
+        postHandler = new FormHandler("POST");
         params = new HashMap<String, String>();
         String styleTag = readFile("resources/style.css");
         params.put("stylesheet", styleTag);
+        params.put("hovercraft", "eels");
     }
 
     @Test
     public void formHandlerShouldRenderFormPage() {
-        WebResource formPage = handler.render(params);
-        //assertEquals("yKtNK9X0Y0yRWsZL5XJa2A==", formPage.checkSum());
+        WebResource formPage = getHandler.render(params);
+        assertTrue(formPage.stringData().contains("Listerously.io"));
+    }
+
+    @Test
+    public void formHandlerReturnsRedirectOnPOST() {
+        WebResource redirect = postHandler.render(params);
+        assertEquals("/list", redirect.url());
+    }
+
+    @Test
+    public void formHandlerStoresPOSTData() {
+        WebResource redirect = postHandler.render(params);
+        assertEquals("eels", KeyValueStore.get("hovercraft"));
     }
 
 }
