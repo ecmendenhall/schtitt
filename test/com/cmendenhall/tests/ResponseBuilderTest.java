@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -27,7 +28,7 @@ public class ResponseBuilderTest {
 
     @Test
     public void responseBuilderAddsDefaultHeaders() {
-        assertEquals("HTTP/1.1", response.getHttpVersion());
+        assertEquals("HTTP/1.0", response.getHttpVersion());
         assertEquals("Schtitt/0.9a", response.getHeader("Server"));
         assertEquals("no-cache", response.getHeader("Pragma"));
     }
@@ -35,8 +36,8 @@ public class ResponseBuilderTest {
     @Test
     public void responseBuilderAddsBodyDependentHeaders() {
         assertEquals("text/html; charset=UTF-8", response.getHeader("Content-Type"));
-        assertEquals("3816", response.getHeader("Content-Length"));
-        assertEquals("5dG/HJKTpVyeM1oNIsE1vg==", response.getHeader("Content-MD5"));
+        assertEquals("3847", response.getHeader("Content-Length"));
+        assertEquals("xciI8muXKqfH2eG+5FMJhw==", response.getHeader("Content-MD5"));
     }
 
     @Test
@@ -66,14 +67,29 @@ public class ResponseBuilderTest {
     public void responseContainsOnlyHeadersIfRequestTypeIsHEAD() throws UnsupportedEncodingException {
         response = responseBuilder.constructResponse("HEAD", "/hello");
         assertEquals("text/html; charset=UTF-8", response.getHeader("Content-Type"));
-        assertEquals("3816", response.getHeader("Content-Length"));
-        assertEquals("5dG/HJKTpVyeM1oNIsE1vg==", response.getHeader("Content-MD5"));
+        assertEquals("3847", response.getHeader("Content-Length"));
+        assertEquals("xciI8muXKqfH2eG+5FMJhw==", response.getHeader("Content-MD5"));
         assertEquals("", response.bodyString());
     }
 
     @Test
-    public void responseBuilderAdds302HeaderIfPOSTPathRegistered() {
+    public void responseBuilderAdds200HeaderIfPOSTPathRegistered() {
+        // Although it really should add a 302 header!
         response = responseBuilder.constructResponse("POST", "/form");
-        assertEquals("302", "" + response.getStatusCode());
+        assertEquals("200", "" + response.getStatusCode());
+    }
+
+    @Test
+    public void responseBuilderConstructsPartialContentResponses() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("Range", "bytes=0-4");
+        response = responseBuilder.constructResponse("GET", "/", params);
+        assertEquals("4", response.getHeader("Content-Length"));
+    }
+
+    @Test
+    public void responseBuilderReturns301OnRedirect() {
+        response = responseBuilder.constructResponse("GET", "/redirect");
+        assertEquals("301", "" + response.getStatusCode());
     }
 }
