@@ -3,10 +3,9 @@ package com.cmendenhall;
 import java.util.HashMap;
 
 public final class Template {
-    private static StaticResourceLoader loader = new StaticResourceLoader();
 
     public static Page render(String templateFile, HashMap<String, String> pageParameters) {
-        String template = loader.loadResource(templateFile);
+        String template = StaticResourceCache.loadResource(templateFile);
 
         for (String param : pageParameters.keySet()) {
             String replacement = pageParameters.get(param);
