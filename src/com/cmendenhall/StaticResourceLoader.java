@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class StaticResourceLoader {
 
-    public String loadResource(String resource) {
+    public String loadResourceFromStream(String resource) {
         ClassLoader loader = getClass().getClassLoader();
         InputStream resourceContentStream = loader.getResourceAsStream(resource);
         InputStreamReader reader = new InputStreamReader(resourceContentStream);

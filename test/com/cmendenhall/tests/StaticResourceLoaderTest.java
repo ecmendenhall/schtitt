@@ -36,7 +36,7 @@ public class StaticResourceLoaderTest {
 
     @Test
     public void resourceLoaderShouldReadPagesIntoStrings() {
-        assertEquals(pageContent, staticResourceLoader.loadResource("hello.html"));
+        assertEquals(pageContent, staticResourceLoader.loadResourceFromStream("hello.html"));
     }
 
 }
