@@ -1,14 +1,20 @@
 package com.cmendenhall;
 
+import java.util.HashMap;
+
 public class Redirect implements WebResource {
     private String url;
+    private HashMap<String, String> customHeaders;
 
     public Redirect(String redirectUrl) {
         url = redirectUrl;
+        customHeaders = new HashMap<String, String>();
+        customHeaders.put("Location", url);
+        customHeaders.put("Refresh", "0; url=" + url);
     }
 
     public String mimeType() {
-        return null;
+        return "text/html";
     }
 
     public String url() {
@@ -16,11 +22,11 @@ public class Redirect implements WebResource {
     }
 
     public String contentLength() {
-        return null;
+        return "0";
     }
 
     public String checkSum() {
-        return null;
+        return "";
     }
 
     public String stringData() {
@@ -29,5 +35,9 @@ public class Redirect implements WebResource {
 
     public byte[] binaryData() {
         return new byte[0];
+    }
+
+    public HashMap<String, String> customHeaders() {
+        return customHeaders;
     }
 }
