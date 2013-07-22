@@ -2,12 +2,12 @@ package com.cmendenhall;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 
 public class FileManager {
     private String rootDirectory = System.getProperty("user.dir");
-    private static HashMap<String, File> fileCache = new HashMap<String, File>();
+    private static ConcurrentHashMap<String, File> fileCache = new ConcurrentHashMap<String, File>();
 
     public List<String> listDirectory(String path) {
         File filePath = getFile(path);

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessageLogger {
+    private MessageQueue messageQueue = MessageQueue.getInstance();
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Date date;
 
@@ -14,20 +15,21 @@ public class MessageLogger {
     }
 
     public void printStartupMessage() {
-        System.out.println("Schtitt 0.9a");
-        log("Press c-C to exit.");
+        messageQueue.add("Schtitt 0.9a");
+        messageQueue.add("Press c-C to exit.");
     }
 
     public void log(Request request) {
-        System.out.println(dateBlock() + "[REQUEST]   " + request);
+        messageQueue.add(dateBlock() + "[REQUEST]   " + request);
     }
 
     public void log(Response response) {
-        System.out.println(dateBlock() + "[RESPONSE]  " + response.getStatusCode() + " " + response.getReasonPhrase());
+        messageQueue.add(dateBlock() + "[RESPONSE]  " + response.getStatusCode() + " " + response.getReasonPhrase());
     }
 
     public void log(String string) {
-        System.out.println(dateBlock() + "[INFO]      " + string);
+        messageQueue.add(dateBlock() + "[INFO]      " + string);
     }
+
 
 }

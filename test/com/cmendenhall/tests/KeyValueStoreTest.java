@@ -46,11 +46,4 @@ public class KeyValueStoreTest {
         assertEquals("bananas", bananas);
     }
 
-    @After
-    public void cleanUp() {
-        keyValueStore.put("field1", field1);
-        keyValueStore.put("field2", field2);
-        keyValueStore.put("field3", field3);
-    }
-
 }

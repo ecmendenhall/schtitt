@@ -59,7 +59,7 @@
 
         @Test
         public void resourceReturnsCorrectContentLength() {
-            assertEquals("4227", directory.contentLength());
+            assertEquals("4271", directory.contentLength());
         }
 
     }

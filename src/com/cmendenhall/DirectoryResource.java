@@ -46,39 +46,6 @@ public class DirectoryResource implements WebResource {
         }
     }
 
-    private String makePage() {
-        String template = makeTemplate();
-        HashMap<String, String> pageParameters = new HashMap<String, String>();
-        pageParameters.put("stylesheet", StaticResourceCache.loadResource("style.css"));
-        pageParameters.put("directorypath", directory.getPath());
-        return renderPage(template, pageParameters);
-    }
-
-    private String makeTemplate() {
-
-        String top    = join("\n", "<html>",
-                                   "  <head>",
-                                   "    <title>Directory Listing</title>",
-                                   "    <style>",
-                                   "      {{% stylesheet %}}",
-                                   "    </style>",
-                                   "  </head>",
-                                   "  <body>",
-                                   "  <h1 class=\"directoryheader\">Directory listing</h1>",
-                                   "  <h2 class=\"directoryheader\">{{% directorypath %}}</h2>",
-                                   "    <ul>");
-
-        String middle = makeIndexEntries();
-
-        String bottom = join("\n",
-
-                                   "    </ul>",
-                                   "  </body>",
-                                   "</html>");
-
-        return join("\n", top, middle, bottom);
-    }
-
     private String makeIndexEntries() {
         File[] files = directory.listFiles();
         List<String> listEntries = new ArrayList<String>();
@@ -100,30 +67,30 @@ public class DirectoryResource implements WebResource {
         return entryElement.format(name);
     }
 
-    public String renderPage(String page, HashMap<String, String> pageParameters) {
-
-        for (String param : pageParameters.keySet()) {
-            String replacement = pageParameters.get(param);
-            page = page.replace("{{% " + param + " %}}", replacement);
-        }
-
-        return page;
-    }
-
     public String stringData() {
-        return makePage();
+        if (StaticResourceCache.containsResource(path)) {
+            return StaticResourceCache.loadResource(path);
+        } else {
+            HashMap<String, String> pageParameters = new HashMap<String, String>();
+            pageParameters.put("stylesheet", StaticResourceCache.loadResource("style.css"));
+            pageParameters.put("directorypath", directory.getPath());
+            pageParameters.put("directorylist", makeIndexEntries());
+
+            String rendered =  Template.render("directory.html", pageParameters).stringData();
+            StaticResourceCache.addResource(path, rendered);
+            return rendered;
+        }
     }
 
     public byte[] binaryData() {
         try {
-            return makePage().getBytes("UTF-8");
+            return stringData().getBytes("UTF-8");
         } catch (Exception e) {
             e.printStackTrace();
             return new byte[0];
         }
     }
 
-    @Override
     public HashMap<String, String> customHeaders() {
         return customHeaders;
     }

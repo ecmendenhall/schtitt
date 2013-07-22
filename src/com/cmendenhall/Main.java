@@ -5,8 +5,13 @@ public class Main {
     private static String rootDirectory = null;
     private static Integer port = 0;
     private static MessageLogger logger = new MessageLogger();
+    private static MessagePrinter printer = new MessagePrinter();
+
 
     public static void main(String[] args) {
+        Thread printerThread = new Thread(printer);
+        printerThread.start();
+
         logger.printStartupMessage();
         loadConfig(args);
 
@@ -43,6 +48,10 @@ public class Main {
 
     public static String getRootDirectory() {
         return rootDirectory;
+    }
+
+    public static void stopPrinter() {
+        printer.stop();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.cmendenhall;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class RequestHandler implements Runnable {
@@ -21,6 +22,10 @@ public class RequestHandler implements Runnable {
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         try {
             rawRequest = readRawRequest();
+            if (rawRequest.isEmpty()) {
+                socket.close();
+                return;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,14 +36,18 @@ public class RequestHandler implements Runnable {
     }
 
     public String readRawRequest() throws IOException {
-        StringBuilder rawRequest = new StringBuilder();
-        char current;
+        ByteArrayOutputStream rawRequest = new ByteArrayOutputStream();
+        int current;
 
-        while ((current = (char)socket.read()) != -1) {
-            rawRequest.append("" + current);
-            if (socket.waiting() || socket.isClosed()) break;
+        try {
+            while ((current = socket.read()) != -1) {
+                rawRequest.write(current);
+                if (socket.waiting() || socket.isClosed()) break;
+            }
+        } catch (java.net.SocketException e) {
+            logger.log(e.getMessage());
         }
-        return rawRequest.toString();
+        return new String(rawRequest.toByteArray());
     }
 
     public Response getResponse() {
@@ -52,11 +61,11 @@ public class RequestHandler implements Runnable {
         try {
             socket.write(response.toBytes());
             socket.flush();
+            socket.close();
             logger.log(response);
             logger.log("Response headers:\n\n" +
                               response.statusLineString() + "\n" +
                               response.headersString() + "\n" );
-            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

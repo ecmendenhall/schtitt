@@ -2,24 +2,22 @@ package com.cmendenhall.tests;
 
 import com.cmendenhall.HTTPServerSocket;
 import com.cmendenhall.Main;
+import com.cmendenhall.MessageQueue;
 import com.cmendenhall.OutputRecorder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 public class MainTest {
-    private OutputRecorder recorder;
+    private MessageQueue messageQueue = MessageQueue.getInstance();
     private String rootDirectory = System.getProperty("user.dir");
 
     @Before
-    public void setUp() throws UnsupportedEncodingException {
-        recorder = new OutputRecorder();
-        recorder.start();
+    public void setUp() {
+        messageQueue.clear();
     }
 
     @Test
@@ -42,7 +40,7 @@ public class MainTest {
         Main.setRootDirectory();
         String directory = System.getProperty("user.dir");
         assertEquals("~/Desktop", directory);
-        assertTrue(recorder.popLastOutput().contains("Serving files from ~/Desktop"));
+        assertTrue(messageQueue.nextMessage().contains("Serving files from ~/Desktop"));
     }
 
     @Test
@@ -52,7 +50,7 @@ public class MainTest {
         Main.setRootDirectory();
         String directory = System.getProperty("user.dir");
         assertEquals(expected, directory);
-        assertTrue(recorder.popLastOutput().contains("Serving files from this folder."));
+        assertTrue(messageQueue.nextMessage().contains("Serving files from this folder."));
     }
 
     @Test
@@ -75,6 +73,8 @@ public class MainTest {
     @After
     public void cleanUp() {
         System.setProperty("user.dir", rootDirectory);
+        messageQueue.clear();
+        Main.stopPrinter();
     }
 
 }

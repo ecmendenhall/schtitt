@@ -18,6 +18,7 @@ public class HTTPClientSocket {
 
     public void write(byte[] bytes) throws IOException {
         output.write(bytes);
+        output.flush();
     }
 
     public void close() throws IOException {

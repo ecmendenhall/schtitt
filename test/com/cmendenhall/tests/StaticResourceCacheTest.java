@@ -5,6 +5,8 @@ import com.cmendenhall.StaticResourceCache;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -14,7 +16,7 @@ public class StaticResourceCacheTest {
     public void staticResourceCacheSavesDataToCache() {
         StaticResourceCache.loadResource("style.css");
 
-        HashMap<String, String> cache = StaticResourceCache.getCache();
+        ConcurrentHashMap<String, String> cache = StaticResourceCache.getCache();
         assertTrue(cache.containsKey("style.css"));
     }
 
