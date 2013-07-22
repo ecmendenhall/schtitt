@@ -1,5 +1,7 @@
 package com.cmendenhall;
 
+import com.cmendenhall.webresources.WebResource;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;

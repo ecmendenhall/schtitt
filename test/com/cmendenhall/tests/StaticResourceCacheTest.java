@@ -1,11 +1,9 @@
 package com.cmendenhall.tests;
 
 
-import com.cmendenhall.StaticResourceCache;
+import com.cmendenhall.webresources.StaticResourceCache;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static junit.framework.Assert.assertTrue;

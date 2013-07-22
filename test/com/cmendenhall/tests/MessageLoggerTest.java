@@ -1,6 +1,8 @@
 package com.cmendenhall.tests;
 
 import com.cmendenhall.*;
+import com.cmendenhall.logging.MessageLogger;
+import com.cmendenhall.logging.MessageQueue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

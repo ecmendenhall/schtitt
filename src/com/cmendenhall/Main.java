@@ -1,5 +1,8 @@
 package com.cmendenhall;
 
+import com.cmendenhall.logging.MessageLogger;
+import com.cmendenhall.logging.MessagePrinter;
+
 public class Main {
     private static ArgumentParser argumentParser = new ArgumentParser();
     private static String rootDirectory = null;

@@ -1,9 +1,9 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.HelloPageHandler;
-import com.cmendenhall.PageHandler;
+import com.cmendenhall.handlers.HelloPageHandler;
+import com.cmendenhall.handlers.PageHandler;
 import com.cmendenhall.RequestRouter;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.Before;
 import org.junit.Test;
 

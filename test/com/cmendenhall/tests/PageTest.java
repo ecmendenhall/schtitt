@@ -1,6 +1,6 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.Page;
+import com.cmendenhall.webresources.Page;
 import org.junit.Before;
 import org.junit.Test;
 

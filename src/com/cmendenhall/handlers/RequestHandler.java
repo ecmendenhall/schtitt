@@ -1,4 +1,7 @@
-package com.cmendenhall;
+package com.cmendenhall.handlers;
+
+import com.cmendenhall.*;
+import com.cmendenhall.logging.MessageLogger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

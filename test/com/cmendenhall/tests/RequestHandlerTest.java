@@ -1,7 +1,7 @@
 package com.cmendenhall.tests;
 
 import com.cmendenhall.OutputRecorder;
-import com.cmendenhall.RequestHandler;
+import com.cmendenhall.handlers.RequestHandler;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.FileHandler;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.handlers.FileHandler;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.Before;
 import org.junit.Test;
 

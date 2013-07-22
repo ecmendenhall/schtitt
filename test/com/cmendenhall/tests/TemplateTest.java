@@ -1,7 +1,7 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.Page;
-import com.cmendenhall.Template;
+import com.cmendenhall.webresources.Page;
+import com.cmendenhall.webresources.Template;
 import org.junit.Test;
 
 import java.util.HashMap;

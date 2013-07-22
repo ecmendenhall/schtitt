@@ -2,8 +2,7 @@ package com.cmendenhall.tests;
 
 import com.cmendenhall.HTTPServerSocket;
 import com.cmendenhall.Main;
-import com.cmendenhall.MessageQueue;
-import com.cmendenhall.OutputRecorder;
+import com.cmendenhall.logging.MessageQueue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

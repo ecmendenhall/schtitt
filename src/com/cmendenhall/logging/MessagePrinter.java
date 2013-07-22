@@ -1,4 +1,4 @@
-package com.cmendenhall;
+package com.cmendenhall.logging;
 
 import java.io.*;
 

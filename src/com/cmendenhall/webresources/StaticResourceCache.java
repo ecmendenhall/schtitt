@@ -1,4 +1,4 @@
-package com.cmendenhall;
+package com.cmendenhall.webresources;
 
 import java.util.concurrent.ConcurrentHashMap;
 

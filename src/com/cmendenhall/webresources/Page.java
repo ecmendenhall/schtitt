@@ -1,4 +1,4 @@
-package com.cmendenhall;
+package com.cmendenhall.webresources;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 

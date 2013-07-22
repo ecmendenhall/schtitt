@@ -1,6 +1,6 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.Redirect;
+import com.cmendenhall.webresources.Redirect;
 import org.junit.Before;
 import org.junit.Test;
 

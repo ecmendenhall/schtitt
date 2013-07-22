@@ -1,7 +1,7 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.RootDirectoryHandler;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.handlers.RootDirectoryHandler;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,7 @@
-package com.cmendenhall;
+package com.cmendenhall.handlers;
+
+import com.cmendenhall.webresources.Template;
+import com.cmendenhall.webresources.WebResource;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

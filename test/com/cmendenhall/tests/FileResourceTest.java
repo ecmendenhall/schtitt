@@ -1,6 +1,6 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.FileResource;
+import com.cmendenhall.webresources.FileResource;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

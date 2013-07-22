@@ -1,4 +1,7 @@
-package com.cmendenhall;
+package com.cmendenhall.logging;
+
+import com.cmendenhall.Request;
+import com.cmendenhall.Response;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

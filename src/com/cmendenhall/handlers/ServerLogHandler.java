@@ -1,5 +1,8 @@
-package com.cmendenhall;
+package com.cmendenhall.handlers;
 
+import com.cmendenhall.webresources.FileResource;
+import com.cmendenhall.webresources.Template;
+import com.cmendenhall.webresources.WebResource;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 import java.util.HashMap;

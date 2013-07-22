@@ -1,8 +1,8 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.PageHandler;
-import com.cmendenhall.SimpleFormHandler;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.handlers.PageHandler;
+import com.cmendenhall.handlers.SimpleFormHandler;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.Test;
 
 import java.util.HashMap;

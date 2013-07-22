@@ -1,8 +1,8 @@
 package com.cmendenhall.tests;
 
 
-import com.cmendenhall.MessagePrinter;
-import com.cmendenhall.MessageQueue;
+import com.cmendenhall.logging.MessagePrinter;
+import com.cmendenhall.logging.MessageQueue;
 import com.cmendenhall.OutputRecorder;
 import org.junit.After;
 import org.junit.Before;

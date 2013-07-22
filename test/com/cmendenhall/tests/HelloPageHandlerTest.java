@@ -1,7 +1,7 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.HelloPageHandler;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.handlers.HelloPageHandler;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.Before;
 import org.junit.Test;
 

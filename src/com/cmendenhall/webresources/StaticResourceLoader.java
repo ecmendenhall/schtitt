@@ -1,4 +1,4 @@
-package com.cmendenhall;
+package com.cmendenhall.webresources;
 
 import java.io.IOException;
 import java.io.InputStream;

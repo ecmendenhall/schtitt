@@ -1,6 +1,6 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.MessageQueue;
+import com.cmendenhall.logging.MessageQueue;
 import org.junit.*;
 
 import static org.junit.Assert.assertEquals;

@@ -1,7 +1,7 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.ServerLogHandler;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.handlers.ServerLogHandler;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.Test;
 
 import java.util.HashMap;

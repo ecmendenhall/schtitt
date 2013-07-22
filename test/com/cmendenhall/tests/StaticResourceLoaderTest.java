@@ -1,6 +1,6 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.StaticResourceLoader;
+import com.cmendenhall.webresources.StaticResourceLoader;
 import org.junit.Before;
 import org.junit.Test;
 

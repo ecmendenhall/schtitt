@@ -1,6 +1,6 @@
     package com.cmendenhall.tests;
 
-    import com.cmendenhall.DirectoryResource;
+    import com.cmendenhall.webresources.DirectoryResource;
     import org.junit.Before;
     import org.junit.Test;
 

@@ -1,9 +1,9 @@
 package com.cmendenhall.tests;
 
 import com.cmendenhall.KeyValueStore;
-import com.cmendenhall.ListHandler;
-import com.cmendenhall.PageHandler;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.handlers.ListHandler;
+import com.cmendenhall.handlers.PageHandler;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

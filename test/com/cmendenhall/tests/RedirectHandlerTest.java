@@ -1,8 +1,8 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.PageHandler;
-import com.cmendenhall.RedirectHandler;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.handlers.PageHandler;
+import com.cmendenhall.handlers.RedirectHandler;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.Test;
 
 import java.util.HashMap;

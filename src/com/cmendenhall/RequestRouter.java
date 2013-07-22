@@ -1,5 +1,9 @@
 package com.cmendenhall;
 
+import com.cmendenhall.handlers.*;
+import com.cmendenhall.webresources.StaticResourceCache;
+import com.cmendenhall.webresources.WebResource;
+
 import java.util.HashMap;
 
 

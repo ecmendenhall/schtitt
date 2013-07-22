@@ -1,8 +1,8 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.FormHandler;
+import com.cmendenhall.handlers.FormHandler;
 import com.cmendenhall.KeyValueStore;
-import com.cmendenhall.WebResource;
+import com.cmendenhall.webresources.WebResource;
 import org.junit.Before;
 import org.junit.Test;
 

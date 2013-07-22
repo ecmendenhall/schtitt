@@ -1,4 +1,6 @@
-package com.cmendenhall;
+package com.cmendenhall.handlers;
+
+import com.cmendenhall.webresources.DirectoryResource;
 
 import java.util.HashMap;
 

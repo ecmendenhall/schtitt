@@ -1,6 +1,6 @@
 package com.cmendenhall.tests;
 
-import com.cmendenhall.TimePageHandler;
+import com.cmendenhall.handlers.TimePageHandler;
 import org.junit.Before;
 import org.junit.Test;
 
