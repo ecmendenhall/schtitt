@@ -1,6 +1,7 @@
 package com.cmendenhall.tests;
 
 import com.cmendenhall.FileResource;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -124,8 +125,15 @@ public class FileResourceTest {
     }
 
     @Test
-    public void fileResourceHasNoCustomHeaders() {
+    public void fileResourceHasNoCustomHeadersByDefault() {
         assertTrue(html.customHeaders().isEmpty());
+    }
+
+    @Test
+    public void resourceStoresCustomHeaders() {
+        html.addCustomHeader("Header", "content");
+        Assert.assertTrue(html.customHeaders().containsKey("Header"));
+        Assert.assertTrue(html.customHeaders().containsValue("content"));
     }
 
 }

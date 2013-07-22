@@ -47,8 +47,7 @@ public class KeyValueStore {
             InputStream inputBuffer = new BufferedInputStream(file);
             ObjectInput objectInput = new ObjectInputStream (inputBuffer);
             try{
-                HashMap<String, String> loadedValues = (HashMap<String, String>) objectInput.readObject();
-                values = loadedValues;
+                values = (HashMap<String, String>) objectInput.readObject();
             }
             finally{
                 objectInput.close();

@@ -102,6 +102,8 @@ public class ResponseBuilder {
             String redirect = requestedResource.customHeaders().get("Location");
             if (redirect != null) response.statusCode("301");
 
+            String authenticate = requestedResource.customHeaders().get("WWW-Authenticate");
+            if (authenticate != null) response.statusCode("401");
 
             addCustomHeaders(response, requestedResource);
             return response;

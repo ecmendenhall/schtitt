@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
 
 public class RedirectTest {
@@ -28,5 +29,12 @@ public class RedirectTest {
     @Test
     public void redirectStoresCustomLocationHeader() {
         assertEquals("/list", redirect.customHeaders().get("Location"));
+    }
+
+    @Test
+    public void resourceStoresCustomHeaders() {
+        redirect.addCustomHeader("Header", "content");
+        assertTrue(redirect.customHeaders().containsKey("Header"));
+        assertTrue(redirect.customHeaders().containsValue("content"));
     }
 }

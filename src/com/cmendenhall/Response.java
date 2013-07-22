@@ -26,6 +26,7 @@ public class Response {
         reasonPhrases.put(302, "Found");
         reasonPhrases.put(303, "See Other");
         reasonPhrases.put(400, "Bad Request");
+        reasonPhrases.put(401, "Unauthorized");
         reasonPhrases.put(404, "Not Found");
         reasonPhrases.put(405, "Method not Allowed");
         reasonPhrases.put(418, "I'm a Teapot");

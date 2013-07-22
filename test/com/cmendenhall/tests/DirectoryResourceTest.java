@@ -62,4 +62,11 @@
             assertEquals("4271", directory.contentLength());
         }
 
+        @Test
+        public void resourceStoresCustomHeaders() {
+            directory.addCustomHeader("Header", "content");
+            assertTrue(directory.customHeaders().containsKey("Header"));
+            assertTrue(directory.customHeaders().containsValue("content"));
+        }
+
     }

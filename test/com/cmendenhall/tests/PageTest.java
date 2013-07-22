@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.UnsupportedEncodingException;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 public class PageTest {
     private Page testPage;
@@ -40,5 +41,12 @@ public class PageTest {
     public void pageReturnsCorrectBinaryData() throws UnsupportedEncodingException {
         String reconstructed = new String(testPage.binaryData(), "UTF-8");
         assertEquals("Fake content", reconstructed);
+    }
+
+    @Test
+    public void resourceStoresCustomHeaders() {
+        testPage.addCustomHeader("Header", "content");
+        assertTrue(testPage.customHeaders().containsKey("Header"));
+        assertTrue(testPage.customHeaders().containsValue("content"));
     }
 }

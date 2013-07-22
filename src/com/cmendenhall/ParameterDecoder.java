@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import static com.cmendenhall.Utils.split;
 
-public class ParameterDecoder {
+public final class ParameterDecoder {
     private HashMap<String, String> replacementCharacters;
 
     public static String decode(String url) {

@@ -8,7 +8,7 @@ public class RequestRouter {
     private FileManager fileManager;
     private PageHandler rootDirectory, helloPage, timePage, formGet, formPost,
                         notFound, directoryPage, filePage, list, parameters,
-                        redirect, simpleFormGet, simpleFormPost;
+                        redirect, simpleFormGet, simpleFormPost, logs;
 
     public RequestRouter() {
         fileManager = new FileManager();
@@ -43,6 +43,7 @@ public class RequestRouter {
         redirect       = new RedirectHandler("http://localhost:5000/");
         simpleFormGet  = new SimpleFormHandler("GET");
         simpleFormPost = new SimpleFormHandler("POST");
+        logs           = new ServerLogHandler();
     }
 
     private void registerRoutes() {
@@ -61,6 +62,8 @@ public class RequestRouter {
         createRoute("PUT",  "/listform",    formPost);
 
         createRoute("GET",  "/redirect",    redirect);
+
+        createRoute("GET", "/logs",         logs);
     }
 
     public boolean routeRegistered(String method, String path) {

@@ -104,7 +104,8 @@ public class FileResource implements WebResource {
             byteStream = new FileInputStream(path);
             int currentByte;
             int byteIndex = 0;
-            while((currentByte = byteStream.read()) != -1) {
+            while((currentByte = byteStream.read()) != -1 &&
+                   byteIndex < bytes.length) {
                 bytes[byteIndex] = (byte) currentByte;
                 byteIndex++;
             }
@@ -116,5 +117,9 @@ public class FileResource implements WebResource {
 
     public HashMap<String, String> customHeaders() {
         return customHeaders;
+    }
+
+    public void addCustomHeader(String header, String content) {
+        customHeaders.put(header, content);
     }
 }

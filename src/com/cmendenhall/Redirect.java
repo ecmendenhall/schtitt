@@ -40,4 +40,8 @@ public class Redirect implements WebResource {
     public HashMap<String, String> customHeaders() {
         return customHeaders;
     }
+
+    public void addCustomHeader(String header, String content) {
+        customHeaders.put(header, content);
+    }
 }

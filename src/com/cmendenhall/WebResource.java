@@ -11,5 +11,6 @@ public interface WebResource {
     public String stringData();
     public byte[] binaryData();
     public HashMap<String, String> customHeaders();
+    public void addCustomHeader(String header, String content);
 
 }
